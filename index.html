@@ -3,74 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIAGA DIGITAL</title>
+    <title>NIAGA DIGITAL - Top Up Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hidden { display: none; }
+        .active-scale:active { transform: scale(0.95); transition: 0.1s; }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-blue-600 p-4 text-white font-bold text-center">NIAGA DIGITAL</nav>
-    
-    <div class="p-6">
-        <div class="bg-white p-4 rounded-xl shadow-md mb-4">
-            <label class="block text-sm font-bold mb-2">Nomor Tujuan</label>
-            <input type="number" id="target" class="w-full border p-2 rounded" placeholder="0853...">
+<body class="bg-gray-50 text-gray-800">
+
+    <nav class="bg-blue-600 p-4 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-between">
+            <h1 class="text-xl font-black italic tracking-tighter">NIAGA DIGITAL</h1>
+            <div class="flex space-x-3">
+                <a href="https://wa.me/6281331814162" class="text-[9px] bg-red-500 px-2 py-1 rounded-full border border-red-400">
+                    <i class="fas fa-exclamation-circle mr-1"></i> Komplain
+                </a>
+                <a href="https://wa.me/6285371178655" class="text-[9px] bg-green-500 px-2 py-1 rounded-full border border-green-400">
+                    <i class="fab fa-whatsapp mr-1"></i> Transaksi
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div id="halaman-menu" class="container mx-auto px-4 py-6">
+        <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 text-white mb-8 shadow-lg relative overflow-hidden">
+            <h2 class="text-lg font-bold italic">PROMO NIAGA DIGITAL!</h2>
+            <p class="text-[10px] opacity-90 text-yellow-300 font-bold italic">Harga Termurah Se-Indonesia!</p>
+            <i class="fas fa-bolt absolute -right-2 -bottom-2 text-6xl opacity-20"></i>
         </div>
 
-        <h2 class="font-bold mb-2">Pilih Produk Game</h2>
-        <div id="produk-list" class="grid grid-cols-1 gap-2">
+        <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase tracking-[0.2em]">Kategori Game Terlaris</h3>
+        <div class="grid grid-cols-3 gap-4 text-center">
+            <div onclick="bukaOrder('Mobile Legends', 'ml', 'ID (Server)')" class="active-scale">
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 flex justify-center">
+                    <img src="https://img.icons8.com/color/48/mobile-legends.png" class="w-10">
+                </div>
+                <span class="text-[10px] font-bold">MLBB</span>
             </div>
+            <div onclick="bukaOrder('Free Fire', 'ff', 'Player ID')" class="active-scale">
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 flex justify-center">
+                    <img src="https://img.icons8.com/color/48/free-fire.png" class="w-10">
+                </div>
+                <span class="text-[10px] font-bold">Free Fire</span>
+            </div>
+            <div onclick="bukaOrder('PUBG Mobile', 'pubg', 'Character ID')" class="active-scale">
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 flex justify-center">
+                    <img src="https://img.icons8.com/color/48/pubg-mobile.png" class="w-10">
+                </div>
+                <span class="text-[10px] font-bold">PUBG</span>
+            </div>
+            <div onclick="bukaOrder('AOV', 'aov', 'Player ID')" class="active-scale">
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 flex justify-center">
+                    <img src="https://img.icons8.com/color/48/arena-of-valor.png" class="w-10">
+                </div>
+                <span class="text-[10px] font-bold">AOV</span>
+            </div>
+            <div onclick="bukaOrder('Genshin Impact', 'gi', 'UID (Server)')" class="active-scale">
+                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 flex justify-center">
+                    <img src="https://img.icons8.com/color/48/genshin-impact.png" class="w-10">
+                </div>
+                <span class="text-[10px] font-bold">Genshin</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="halaman-order" class="container mx-auto px-4 py-6 hidden">
+        <button onclick="kembali()" class="bg-white px-5 py-2 rounded-full shadow-sm text-blue-600 text-[10px] font-bold mb-6 border border-gray-100">
+            <i class="fas fa-chevron-left mr-1"></i> KEMBALI
+        </button>
+
+        <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100 mb-6">
+            <h3 id="judul-game" class="text-xl font-black text-blue-600 mb-4 tracking-tighter italic">Top Up</h3>
+            <label class="block text-[10px] font-bold text-gray-400 mb-2 uppercase">ID Pelanggan</label>
+            <input type="text" id="target" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-5 py-4 focus:border-blue-500 outline-none font-bold text-lg" placeholder="Masukkan ID...">
+            <p id="info-id" class="text-[9px] mt-3 text-orange-500 font-medium italic"></p>
+        </div>
+
+        <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase tracking-[0.2em]">Pilih Nominal</h3>
+        <div id="list-produk" class="space-y-3"></div>
     </div>
 
     <script>
-// Data produk pilihan Anda
-const produk = [
-    { id: "ml5", nama: "Mobile Legends 5 DM", hargaModal: 1450 },
-    { id: "ml12", nama: "Mobile Legends 12 DM", hargaModal: 3400 },
-    { id: "ff50", nama: "Free Fire 50 DM", hargaModal: 6200 },
-    { id: "pubg35", nama: "PUBG Mobile 35 UC", hargaModal: 7100 }
-];
+        const WA_TRANSAKSI = "6285371178655";
+        const UNTUNG = 250; // Laba bersih Anda
 
-const untung = 250; // Sesuai keinginan Anda (Contoh: 1000 + 250 = 1250)
-const listContainer = document.getElementById('produk-list');
+        const DB_PRODUK = {
+            'ml': [
+                { sku: 'ml5', nama: '5 Diamonds', modal: 1450 },
+                { sku: 'ml12', nama: '12 Diamonds', modal: 3400 },
+                { sku: 'ml28', nama: '28 Diamonds', modal: 7800 },
+                { sku: 'ml85', nama: '85 Diamonds', modal: 22000 }
+            ],
+            'ff': [
+                { sku: 'ff50', nama: '50 Diamonds', modal: 6200 },
+                { sku: 'ff70', nama: '70 Diamonds', modal: 8900 },
+                { sku: 'ff140', nama: '140 Diamonds', modal: 17500 }
+            ],
+            'pubg': [
+                { sku: 'pubg35', nama: '35 UC', modal: 7100 },
+                { sku: 'pubg50', nama: '50 UC', modal: 10000 }
+            ],
+            'aov': [
+                { sku: 'aov40', nama: '40 Vouchers', modal: 9500 }
+            ],
+            'gi': [
+                { sku: 'gi60', nama: '60 Genesis Crystals', modal: 11500 }
+            ]
+        };
 
-// Menampilkan produk ke layar HP pelanggan
-produk.forEach(p => {
-    const hargaJual = p.hargaModal + untung; 
-    listContainer.innerHTML += `
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mb-2 flex justify-between items-center">
-            <div>
-                <p class="font-bold text-gray-800">${p.nama}</p>
-                <p class="text-blue-600 font-semibold">Rp ${hargaJual.toLocaleString()}</p>
-            </div>
-            <button onclick="bayar('${p.id}', ${hargaJual})" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold active:bg-blue-800">
-                BELI
-            </button>
-        </div>
-    `;
-});
+        function bukaOrder(nama, kode, label) {
+            document.getElementById('halaman-menu').classList.add('hidden');
+            document.getElementById('halaman-order').classList.remove('hidden');
+            document.getElementById('judul-game').innerText = "Top Up " + nama;
+            document.getElementById('info-id').innerText = "*Perhatian: Pastikan " + label + " sudah benar.";
+            window.scrollTo(0,0);
+            
+            const list = document.getElementById('list-produk');
+            list.innerHTML = "";
+            (DB_PRODUK[kode] || []).forEach(p => {
+                const hargaFinal = p.modal + UNTUNG;
+                list.innerHTML += `
+                    <div onclick="checkout('${nama}', '${p.nama}', ${hargaFinal})" class="active-scale bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center border-l-4 border-l-blue-500">
+                        <div><p class="font-bold text-gray-700 text-sm">${p.nama}</p></div>
+                        <div class="text-right">
+                            <p class="text-blue-600 font-black text-sm">Rp ${hargaFinal.toLocaleString('id-ID')}</p>
+                        </div>
+                    </div>`;
+            });
+        }
 
-function bayar(sku, harga) {
-    const no = document.getElementById('target').value;
-    if(!no) return alert("Masukkan ID/Nomor dulu!");
-    alert("Pesanan " + sku + " untuk " + no + " seharga Rp " + harga + " akan diproses!");
-}
+        function kembali() {
+            document.getElementById('halaman-order').classList.add('hidden');
+            document.getElementById('halaman-menu').classList.remove('hidden');
+        }
 
-        ];
+        function checkout(game, item, harga) {
+            const idUser = document.getElementById('target').value;
+            if(!idUser) return alert("Harap isi ID Pelanggan!");
 
-        const untung = 250; // Keuntungan yang Anda inginkan
-        const listContainer = document.getElementById('produk-list');
-
-        produk.forEach(p => {
-            const hargaJual = p.hargaModal + untung; // Rumus: 1000 + 250 = 1250
-            listContainer.innerHTML += `
-                <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
-                    <div>
-                        <p class="font-bold">${p.nama}</p>
-                        <p class="text-blue-600 text-sm">Rp ${hargaJual.toLocaleString()}</p>
-                    </div>
-                    <button class="bg-green-500 text-white px-4 py-2 rounded text-sm font-bold">BELI</button>
-                </div>
-            `;
-        });
+            const pesan = `Halo NIAGA DIGITAL, saya ingin beli:\n\nProduk: ${game} - ${item}\nID: ${idUser}\nTotal: Rp ${harga.toLocaleString('id-ID')}\n\nMohon petunjuk pembayaran.`;
+            window.location.href = `https://wa.me/${WA_TRANSAKSI}?text=${encodeURIComponent(pesan)}`;
+        }
     </script>
 </body>
 </html>

@@ -1,42 +1,43 @@
+const axios = require('axios');
 const crypto = require('crypto');
 
 export default async function handler(req, res) {
-    // --- PENGATURAN ANDA ---
-    const DIGI_USER = "isi_username_anda"; 
-    const DIGI_KEY = "isi_api_key_anda";   
-    const UNTUNG = 250; // Anda bisa ubah angka ini kapan saja
-    // -----------------------
+    // Memastikan hanya permintaan POST yang diproses
+    if (req.method !== 'POST') {
+        return res.status(405).json({ message: 'Metode Tidak Diizinkan' });
+    }
 
-    if (req.method === 'POST') {
-        const { sku, customer_no, ref_id } = req.body;
-        const signature = crypto.createHash('md5')
-            .update(DIGI_USER + DIGI_KEY + ref_id)
-            .digest('hex');
+    const { sku, target } = req.body;
 
-        try {
-            const response = await fetch('https://api.digiflazz.com/v1/transaction', {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: DIGI_USER,
-                    buyer_sku_code: sku,
-                    customer_no: customer_no,
-                    ref_id: ref_id,
-                    sign: signature
-                })
-            });
+    // Kredensial Anda yang diambil dari Environment Variables Vercel
+    const DIGI_USER = process.env.DIGI_USER; // cabivaoJKz6D
+    const DIGI_KEY = process.env.DIGI_KEY;   // 36b29847-b56d-5dff-b8e7-a3e055860dbf
 
-            const data = await response.json();
-            
-            // Logika Markup: Harga asli + Untung
-            if (data.data) {
-                data.data.price += UNTUNG; 
-            }
+    // Membuat nomor referensi unik untuk setiap transaksi
+    const refId = 'NIAGA-' + Date.now();
 
-            res.status(200).json(data);
-        } catch (error) {
-            res.status(500).json({ error: "Gagal menyambung ke Digiflazz" });
-        }
-    } else {
-        res.status(405).json({ message: "Gunakan POST" });
+    // Membuat MD5 Signature sesuai aturan Digiflazz (user + key + ref_id)
+    const sign = crypto.createHash('md5')
+        .update(DIGI_USER + DIGI_KEY + refId)
+        .digest('hex');
+
+    try {
+        // Mengirimkan perintah transaksi ke server Digiflazz
+        const response = await axios.post('https://api.digiflazz.com/v1/transaction', {
+            username: DIGI_USER,
+            buyer_sku_code: sku,
+            customer_no: target,
+            ref_id: refId,
+            sign: sign
+        });
+
+        // Mengirimkan hasil sukses kembali ke website Anda
+        return res.status(200).json(response.data);
+    } catch (error) {
+        // Mengirimkan pesan jika terjadi gangguan koneksi atau saldo habis
+        return res.status(500).json({ 
+            message: 'Gagal memproses transaksi ke Digiflazz',
+            error: error.message 
+        });
     }
 }
