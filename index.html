@@ -3,145 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIAGA DIGITAL - Top Up Center</title>
+    <title>NIAGA DIGITAL - Top Up Termurah</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .hidden { display: none; }
         .active-scale:active { transform: scale(0.95); transition: 0.1s; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 text-gray-800 font-sans pb-10">
 
-    <nav class="bg-blue-600 p-4 text-white shadow-md sticky top-0 z-50">
+    <nav class="bg-blue-600 p-4 text-white shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex items-center justify-between">
-            <h1 class="text-xl font-black italic tracking-tighter">NIAGA DIGITAL</h1>
-            <div class="flex space-x-3">
-                <a href="https://wa.me/6281331814162" class="text-[9px] bg-red-500 px-3 py-1 rounded-full border border-red-400">Komplain</a>
-                <a href="https://wa.me/6285371178655" class="text-[9px] bg-green-500 px-3 py-1 rounded-full border border-green-400 font-bold text-white">WA</a>
+            <div class="flex items-center gap-2">
+                <i class="fas fa-gamepad text-2xl"></i>
+                <h1 class="text-lg font-black italic tracking-tighter">NIAGA DIGITAL</h1>
             </div>
+            <a href="https://wa.me/6285371178655" class="bg-green-500 hover:bg-green-600 px-4 py-1.5 rounded-full text-[10px] font-bold shadow-md transition">
+                <i class="fab fa-whatsapp mr-1"></i> BANTUAN
+            </a>
         </div>
     </nav>
 
     <div id="halaman-menu" class="container mx-auto px-4 py-6">
         
-        <div id="banner-container" class="relative w-full overflow-hidden rounded-[2rem] mb-8 shadow-lg h-44 bg-gray-200">
+        <div class="relative w-full overflow-hidden rounded-[1.5rem] mb-8 shadow-lg h-40 bg-gray-300">
             <div id="slider-wrapper" class="flex transition-transform duration-500 ease-in-out h-full">
                 </div>
         </div>
 
-        <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase tracking-[0.2em] italic">Kategori Game Terlaris</h3>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Pilih Game</h3>
+        </div>
+        
         <div class="grid grid-cols-3 gap-4 text-center">
-            <div onclick="bukaOrder('Mobile Legends', 'ml', 'ID (Server)')" class="active-scale flex flex-col items-center">
-                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 w-full flex justify-center">
-                    <img src="https://img.icons8.com/color/96/mobile-legends.png" class="w-10 h-10">
+            <div onclick="bukaOrder('Mobile Legends', 'ml', 'ID (Server)')" class="active-scale cursor-pointer group">
+                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2">
+                    <img src="https://img.icons8.com/color/96/mobile-legends.png" class="w-10 h-10 mx-auto" alt="MLBB">
                 </div>
-                <span class="text-[10px] font-bold uppercase tracking-tighter">MLBB</span>
+                <span class="text-[10px] font-bold text-gray-600">MLBB</span>
             </div>
-            <div onclick="bukaOrder('Free Fire', 'ff', 'Player ID')" class="active-scale flex flex-col items-center">
-                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 w-full flex justify-center">
-                    <img src="https://img.icons8.com/color/96/free-fire.png" class="w-10 h-10">
+
+            <div onclick="bukaOrder('Free Fire', 'ff', 'ID Player')" class="active-scale cursor-pointer group">
+                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2">
+                    <img src="https://img.icons8.com/color/96/free-fire.png" class="w-10 h-10 mx-auto" alt="FF">
                 </div>
-                <span class="text-[10px] font-bold uppercase tracking-tighter">Free Fire</span>
+                <span class="text-[10px] font-bold text-gray-600">Free Fire</span>
             </div>
-            <div onclick="bukaOrder('PUBG Mobile', 'pubg', 'Character ID')" class="active-scale flex flex-col items-center">
-                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 w-full flex justify-center">
-                    <img src="https://img.icons8.com/color/96/pubg.png" class="w-10 h-10">
+
+            <div onclick="bukaOrder('PUBG Mobile', 'pubg', 'ID Karakter')" class="active-scale cursor-pointer group">
+                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2">
+                    <img src="https://img.icons8.com/color/96/pubg.png" class="w-10 h-10 mx-auto" alt="PUBG">
                 </div>
-                <span class="text-[10px] font-bold uppercase tracking-tighter">PUBG</span>
+                <span class="text-[10px] font-bold text-gray-600">PUBG</span>
             </div>
-            <div onclick="bukaOrder('Garena AOV', 'aov', 'Player ID')" class="active-scale flex flex-col items-center">
-                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 w-full flex justify-center">
-                    <img src="https://img.icons8.com/color/96/arena-of-valor.png" class="w-10 h-10">
+
+            <div onclick="bukaOrder('Arena of Valor', 'aov', 'ID Player')" class="active-scale cursor-pointer group">
+                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2">
+                    <img src="https://img.icons8.com/color/96/arena-of-valor.png" class="w-10 h-10 mx-auto" alt="AOV">
                 </div>
-                <span class="text-[10px] font-bold uppercase tracking-tighter">AOV</span>
+                <span class="text-[10px] font-bold text-gray-600">AOV</span>
             </div>
-            <div onclick="bukaOrder('Genshin Impact', 'gi', 'UID (Server)')" class="active-scale flex flex-col items-center">
-                <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-2 w-full flex justify-center">
-                    <img src="https://img.icons8.com/color/96/genshin-impact.png" class="w-10 h-10">
+
+            <div onclick="bukaOrder('Genshin Impact', 'gi', 'UID (Server)')" class="active-scale cursor-pointer group">
+                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2">
+                    <img src="https://img.icons8.com/color/96/genshin-impact.png" class="w-10 h-10 mx-auto" alt="Genshin">
                 </div>
-                <span class="text-[10px] font-bold uppercase tracking-tighter">Genshin</span>
+                <span class="text-[10px] font-bold text-gray-600">Genshin</span>
             </div>
         </div>
     </div>
 
     <div id="halaman-order" class="container mx-auto px-4 py-6 hidden">
-        <button onclick="kembali()" class="bg-white px-5 py-2 rounded-full shadow-sm text-blue-600 text-[10px] font-bold mb-6 border border-gray-100 uppercase tracking-widest">
-            <i class="fas fa-arrow-left mr-1"></i> Kembali
+        <button onclick="kembali()" class="bg-white px-5 py-2 rounded-full shadow-sm text-gray-600 text-[10px] font-bold mb-6 border border-gray-200 active:scale-95 transition">
+            <i class="fas fa-arrow-left mr-2"></i> KEMBALI
         </button>
 
-        <div class="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-100 mb-6">
-            <h3 id="judul-game" class="text-xl font-black text-blue-600 mb-4 italic tracking-tighter">TOP UP</h3>
-            <label class="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">ID Pelanggan / Nomor Tujuan</label>
-            <input type="text" id="target" class="w-full bg-gray-50 border-2 border-gray-100 rounded-2xl px-5 py-4 focus:border-blue-500 outline-none font-bold text-lg" placeholder="Masukkan ID di sini...">
-            <p id="info-id" class="text-[9px] mt-3 text-orange-500 font-medium italic"></p>
+        <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100 mb-6">
+            <h3 id="judul-game" class="text-xl font-black text-blue-600 mb-4 italic tracking-tighter uppercase">TOP UP</h3>
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                <label class="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">Masukkan ID Tujuan</label>
+                <input type="tel" id="target" class="w-full bg-transparent border-b-2 border-gray-300 py-2 text-lg font-bold text-gray-800 outline-none focus:border-blue-500 transition placeholder-gray-300" placeholder="Contoh: 12345678">
+            </div>
+            <p id="info-id" class="text-[9px] mt-3 text-orange-500 font-medium italic">*Pastikan ID sudah benar sebelum memilih produk.</p>
         </div>
 
         <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase tracking-widest">Pilih Nominal</h3>
-        <div id="list-produk" class="space-y-3 pb-20"></div>
+        <div id="list-produk" class="space-y-3 pb-10">
+            </div>
     </div>
 
     <script>
-        const WA_TRANSAKSI = "6285371178655";
-        const UNTUNG = 250; // Laba Anda
+        const UNTUNG = 250; // Keuntungan per transaksi
+        const NOMOR_WA_ADMIN = "6285371178655";
 
+        // DATABASE PRODUK (Contoh SKU Digiflazz)
+        // Silakan sesuaikan SKU dengan yang ada di Digiflazz Anda
         const DB_PRODUK = {
             'ml': [
-                { sku: 'ml5', nama: '5 Diamonds', modal: 1450 },
-                { sku: 'ml12', nama: '12 Diamonds', modal: 3400 },
-                { sku: 'ml28', nama: '28 Diamonds', modal: 7800 },
-                { sku: 'ml85', nama: '85 Diamonds', modal: 22000 }
+                { sku: 'ML5', nama: '5 Diamonds', modal: 1450 },
+                { sku: 'ML12', nama: '12 Diamonds', modal: 3400 },
+                { sku: 'ML28', nama: '28 Diamonds', modal: 7800 },
+                { sku: 'ML59', nama: '59 Diamonds', modal: 15500 },
+                { sku: 'ML85', nama: '85 Diamonds', modal: 22000 }
             ],
             'ff': [
-                { sku: 'ff50', nama: '50 Diamonds', modal: 6200 },
-                { sku: 'ff70', nama: '70 Diamonds', modal: 8900 }
+                { sku: 'FF5', nama: '5 Diamonds', modal: 800 },
+                { sku: 'FF50', nama: '50 Diamonds', modal: 6200 },
+                { sku: 'FF70', nama: '70 Diamonds', modal: 8900 },
+                { sku: 'FF140', nama: '140 Diamonds', modal: 17500 }
             ],
             'pubg': [
-                { sku: 'pubg35', nama: '35 UC', modal: 7100 },
-                { sku: 'pubg50', nama: '50 UC', modal: 10000 }
+                { sku: 'PUBG35', nama: '35 UC', modal: 7100 },
+                { sku: 'PUBG50', nama: '50 UC', modal: 10000 }
             ],
-            'aov': [ { sku: 'aov40', nama: '40 Vouchers', modal: 9500 } ],
-            'gi': [ { sku: 'gi60', nama: '60 Genesis', modal: 11500 } ]
+            'aov': [ { sku: 'AOV40', nama: '40 Vouchers', modal: 9500 } ],
+            'gi': [ { sku: 'GI60', nama: '60 Genesis', modal: 11500 } ]
         };
 
-        // Memuat Banner dari Admin
+        // FUNGSI SLIDER BANNER
         function muatBanner() {
             const defaultBanners = [
                 "https://img.freepik.com/free-vector/gaming-banner-template-with-flat-design_23-2148902691.jpg",
                 "https://img.freepik.com/free-vector/esports-gaming-banner-template-with-abstract-background_23-2148897538.jpg"
             ];
-            const banners = JSON.parse(localStorage.getItem('niaga_banners')) || defaultBanners;
+            // Ambil dari LocalStorage (yang disave Admin)
+            const savedBanners = JSON.parse(localStorage.getItem('niaga_banners')) || defaultBanners;
+            
             const wrapper = document.getElementById('slider-wrapper');
-            wrapper.innerHTML = banners.map(img => `<img src="${img}" class="w-full flex-shrink-0 object-cover h-full">`).join('');
+            wrapper.innerHTML = savedBanners.map(img => `<img src="${img}" class="w-full flex-shrink-0 h-full object-cover">`).join('');
             
             let i = 0;
             setInterval(() => {
-                i = (i + 1) % banners.length;
+                i = (i + 1) % savedBanners.length;
                 wrapper.style.transform = `translateX(-${i * 100}%)`;
-            }, 4000);
+            }, 3500);
         }
 
-        function bukaOrder(nama, kode, label) {
+        // FUNGSI NAVIGASI
+        function bukaOrder(namaGame, kodeGame, placeholderID) {
             document.getElementById('halaman-menu').classList.add('hidden');
             document.getElementById('halaman-order').classList.remove('hidden');
-            document.getElementById('judul-game').innerText = "TOP UP " + nama.toUpperCase();
-            document.getElementById('info-id').innerText = "*Perhatian: Pastikan " + label + " sudah benar.";
+            document.getElementById('judul-game').innerText = "TOP UP " + namaGame.toUpperCase();
+            document.getElementById('target').placeholder = placeholderID;
             window.scrollTo(0,0);
-            
-            const list = document.getElementById('list-produk');
-            list.innerHTML = "";
-            (DB_PRODUK[kode] || []).forEach(p => {
-                const hargaFinal = p.modal + UNTUNG;
-                list.innerHTML += `
-                    <div onclick="checkout('${nama}', '${p.nama}', ${hargaFinal})" class="active-scale bg-white p-5 rounded-3xl shadow-sm border border-gray-100 flex justify-between items-center border-l-4 border-l-blue-500">
-                        <div>
-                            <p class="font-bold text-gray-700 text-sm">${p.nama}</p>
-                            <p class="text-[9px] text-gray-400 italic">Proses 1-10 Menit</p>
-                        </div>
-                        <p class="text-blue-600 font-black text-sm text-right">Rp ${hargaFinal.toLocaleString('id-ID')}</p>
-                    </div>`;
-            });
+            renderProduk(kodeGame, namaGame);
         }
 
         function kembali() {
@@ -149,14 +155,36 @@
             document.getElementById('halaman-menu').classList.remove('hidden');
         }
 
-        function checkout(game, item, harga) {
-            const idUser = document.getElementById('target').value;
-            if(!idUser) return alert("Harap masukkan ID Pelanggan!");
+        function renderProduk(kode, namaGame) {
+            const list = document.getElementById('list-produk');
+            list.innerHTML = "";
+            const produk = DB_PRODUK[kode] || [];
 
-            const pesan = `Halo NIAGA DIGITAL, saya ingin beli:\n\nProduk: ${game} - ${item}\nID Tujuan: ${idUser}\nTotal: Rp ${harga.toLocaleString('id-ID')}\n\nMohon instruksi bayarnya kak.`;
-            window.location.href = `https://wa.me/${WA_TRANSAKSI}?text=${encodeURIComponent(pesan)}`;
+            produk.forEach(p => {
+                const hargaJual = p.modal + UNTUNG;
+                list.innerHTML += `
+                <div onclick="kirimPesanan('${namaGame}', '${p.nama}', ${hargaJual})" class="active-scale bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-400 transition group">
+                    <div>
+                        <p class="font-bold text-gray-700 text-sm group-hover:text-blue-600">${p.nama}</p>
+                        <p class="text-[9px] text-gray-400 italic">Klik untuk beli</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-blue-600 font-black text-sm">Rp ${hargaJual.toLocaleString('id-ID')}</p>
+                    </div>
+                </div>`;
+            });
         }
 
+        function kirimPesanan(game, item, harga) {
+            const idTujuan = document.getElementById('target').value;
+            if(!idTujuan) return alert("Harap masukkan ID Game terlebih dahulu!");
+
+            const pesan = `Halo Kak, saya mau Top Up:\n\n🎮 Game: ${game}\n💎 Item: ${item}\n🆔 ID: ${idTujuan}\n💰 Harga: Rp ${harga.toLocaleString('id-ID')}\n\nMohon diproses ya kak!`;
+            
+            window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${encodeURIComponent(pesan)}`, '_blank');
+        }
+
+        // Jalankan Slider saat web dibuka
         muatBanner();
     </script>
 </body>
