@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIAGA DIGITAL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 p-4 text-white font-bold text-center">NIAGA DIGITAL</nav>
+    
+    <div class="p-6">
+        <div class="bg-white p-4 rounded-xl shadow-md mb-4">
+            <label class="block text-sm font-bold mb-2">Nomor Tujuan</label>
+            <input type="number" id="target" class="w-full border p-2 rounded" placeholder="0853...">
+        </div>
+
+        <h2 class="font-bold mb-2">Pilih Produk Game</h2>
+        <div id="produk-list" class="grid grid-cols-1 gap-2">
+            </div>
+    </div>
+
+    <script>
+// Data produk pilihan Anda
+const produk = [
+    { id: "ml5", nama: "Mobile Legends 5 DM", hargaModal: 1450 },
+    { id: "ml12", nama: "Mobile Legends 12 DM", hargaModal: 3400 },
+    { id: "ff50", nama: "Free Fire 50 DM", hargaModal: 6200 },
+    { id: "pubg35", nama: "PUBG Mobile 35 UC", hargaModal: 7100 }
+];
+
+const untung = 250; // Sesuai keinginan Anda (Contoh: 1000 + 250 = 1250)
+const listContainer = document.getElementById('produk-list');
+
+// Menampilkan produk ke layar HP pelanggan
+produk.forEach(p => {
+    const hargaJual = p.hargaModal + untung; 
+    listContainer.innerHTML += `
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mb-2 flex justify-between items-center">
+            <div>
+                <p class="font-bold text-gray-800">${p.nama}</p>
+                <p class="text-blue-600 font-semibold">Rp ${hargaJual.toLocaleString()}</p>
+            </div>
+            <button onclick="bayar('${p.id}', ${hargaJual})" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold active:bg-blue-800">
+                BELI
+            </button>
+        </div>
+    `;
+});
+
+function bayar(sku, harga) {
+    const no = document.getElementById('target').value;
+    if(!no) return alert("Masukkan ID/Nomor dulu!");
+    alert("Pesanan " + sku + " untuk " + no + " seharga Rp " + harga + " akan diproses!");
+}
+
+        ];
+
+        const untung = 250; // Keuntungan yang Anda inginkan
+        const listContainer = document.getElementById('produk-list');
+
+        produk.forEach(p => {
+            const hargaJual = p.hargaModal + untung; // Rumus: 1000 + 250 = 1250
+            listContainer.innerHTML += `
+                <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+                    <div>
+                        <p class="font-bold">${p.nama}</p>
+                        <p class="text-blue-600 text-sm">Rp ${hargaJual.toLocaleString()}</p>
+                    </div>
+                    <button class="bg-green-500 text-white px-4 py-2 rounded text-sm font-bold">BELI</button>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
