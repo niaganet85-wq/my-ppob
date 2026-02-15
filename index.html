@@ -10,6 +10,23 @@
         .active-scale:active{transform:scale(0.95); transition:0.1s;}
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* --- ANIMASI TEKS BERJALAN CSS (MODERN & MULUS) --- */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .marquee-text {
+            display: inline-block;
+            padding-left: 100%; /* Mulai dari luar layar kanan */
+            animation: marquee-animation 15s linear infinite; /* Kecepatan 15 detik, diulang terus */
+        }
+        /* Kunci gerakan agar tidak ada jeda macet */
+        @keyframes marquee-animation {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen pb-20">
@@ -38,10 +55,14 @@
             <div id="indikator-banner" class="absolute bottom-2 left-0 w-full flex justify-center gap-1 z-10"></div>
         </div>
 
-        <div id="container-info" class="hidden mb-6 bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center gap-3 shadow-sm">
-            <div class="bg-yellow-400 text-yellow-900 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 animate-pulse"><i class="fas fa-bullhorn text-xs"></i></div>
-            <div class="w-full overflow-hidden">
-                <marquee id="text-info-display" class="text-xs font-bold text-yellow-800" direction="left" scrollamount="6" behavior="scroll">...</marquee>
+        <div id="container-info" class="hidden mb-6 bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center gap-3 shadow-sm overflow-hidden">
+            <div class="bg-yellow-400 text-yellow-900 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 z-10 shadow-sm">
+                <i class="fas fa-bullhorn text-xs animate-swing"></i>
+            </div>
+            <div class="w-full marquee-container">
+                <div id="text-info-display" class="marquee-text text-xs font-bold text-yellow-800">
+                    Memuat Info...
+                </div>
             </div>
         </div>
 
@@ -82,26 +103,30 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- 1. LOAD LOGO HEADER (BARU) ---
+        // --- 1. LOGO HEADER ---
         onValue(ref(db, 'pengaturan/logo'), (snap) => {
             const data = snap.val();
-            // Jika ada logo di database, ganti gambarnya
             if(data && data.url) document.getElementById('logo-header').src = data.url;
         });
 
-        // --- 2. FITUR LAIN ---
+        // --- 2. TEKS BERJALAN (CSS ANIMATION) ---
         onValue(ref(db, 'pengaturan/info_berjalan'), (snap) => {
             const data = snap.val(); const c=document.getElementById('container-info');
-            if(data && data.text && data.text.trim()!=="") { c.classList.remove('hidden'); document.getElementById('text-info-display').innerText=data.text; }
+            if(data && data.text && data.text.trim()!=="") { 
+                c.classList.remove('hidden'); 
+                document.getElementById('text-info-display').innerText = data.text; 
+            }
             else { c.classList.add('hidden'); }
         });
 
+        // Banner
         onValue(ref(db, 'banners'), (snap) => {
             const data = snap.val(); const s=document.getElementById('slider-banner'); const i=document.getElementById('indikator-banner'); s.innerHTML=""; i.innerHTML="";
             if(data) { Object.values(data).forEach(b=>{ s.innerHTML+=`<img src="${b.url}" class="w-full h-full object-cover flex-shrink-0 snap-center bg-gray-100">`; i.innerHTML+=`<div class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm shadow-sm"></div>`; });
             let pos=0; setInterval(()=>{ pos+=s.offsetWidth; if(pos>=s.scrollWidth)pos=0; s.scrollTo({left:pos,behavior:'smooth'}); },4000); }
         });
 
+        // Kategori
         onValue(ref(db, 'kategori_game'), (snap) => {
             const data = snap.val(); const g=document.getElementById('grid-game'); g.innerHTML="";
             if(data) Object.values(data).forEach(ga=>{ g.innerHTML+=`<div onclick="bukaGame('${ga.kode}','${ga.nama}')" class="active-scale bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-28 cursor-pointer"><img src="${ga.icon}" class="w-8 h-8 object-contain"><span class="text-[10px] font-bold text-center leading-tight text-gray-700 line-clamp-2">${ga.nama}</span></div>`; });
