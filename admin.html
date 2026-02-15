@@ -3,155 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN GAME KU - PRO</title>
+    <title>ADMIN SUPER - GAME KU</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>.hidden{display:none} .glass{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);}</style>
-</head>
-<body class="bg-[#0f172a] text-gray-200 font-sans min-h-screen">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-    <div id="login" class="fixed inset-0 flex items-center justify-center bg-[#0f172a] z-50">
-        <div class="bg-[#1e293b] p-8 rounded-2xl w-80 text-center border border-gray-700 shadow-2xl">
-            <i class="fas fa-user-shield text-4xl text-blue-500 mb-4"></i>
-            <h2 class="text-xl font-bold mb-6 text-white">LOGIN OWNER</h2>
-            <input type="password" id="pin" class="w-full bg-[#0f172a] p-4 rounded-xl mb-4 text-center text-2xl tracking-[5px] outline-none focus:border-blue-500 border border-gray-700" placeholder="••••••" maxlength="6">
-            <button onclick="auth()" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">MASUK PANEL</button>
-        </div>
-    </div>
+        const firebaseConfig = {
+          apiKey: "AIzaSyAIxFEDC9QBYsOyPFFL5tUBz1I8mlH66Hs",
+          authDomain: "games-ku.firebaseapp.com",
+          databaseURL: "https://games-ku-default-rtdb.firebaseio.com",
+          projectId: "games-ku",
+          storageBucket: "games-ku.firebasestorage.app",
+          messagingSenderId: "488423956",
+          appId: "1:488423956:web:79f659dee525fdbc76dd01",
+          measurementId: "G-JYEJK67H4V"
+        };
 
-    <div id="panel" class="hidden">
-        <div class="bg-blue-600 p-6 pb-10 rounded-b-[2.5rem] shadow-lg relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-chart-line text-9xl"></i></div>
-            <div class="flex justify-between items-center mb-6 relative z-10">
-                <div>
-                    <h1 class="font-black italic text-2xl tracking-tighter text-white">GAME KU</h1>
-                    <p class="text-xs text-blue-200">Admin Dashboard</p>
-                </div>
-                <button onclick="refreshData()" class="bg-white/20 p-3 rounded-full hover:rotate-180 transition duration-700 text-white"><i class="fas fa-sync-alt"></i></button>
-            </div>
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-            <div class="grid grid-cols-2 gap-3 relative z-10">
-                <div class="glass p-4 rounded-2xl bg-white/10">
-                    <p class="text-[10px] uppercase font-bold text-blue-200 mb-1">Saldo Digiflazz</p>
-                    <h2 id="saldo-digi" class="text-lg font-bold text-white">Rp 0</h2>
-                </div>
-                <div class="glass p-4 rounded-2xl bg-white/10">
-                    <p class="text-[10px] uppercase font-bold text-purple-200 mb-1">Saldo API Games</p>
-                    <h2 id="saldo-api" class="text-lg font-bold text-white">Rp 0</h2>
-                </div>
-            </div>
-            <div class="glass mt-3 p-3 rounded-xl bg-green-500/20 border-green-500/30 flex justify-between items-center relative z-10">
-                <span class="text-xs font-bold text-green-300">Estimasi Laba Hari Ini:</span>
-                <span id="laba" class="font-black text-green-300">Rp 0</span>
-            </div>
-        </div>
+        // --- FUNGSI 1: KELOLA PRODUK (SIMPAN/EDIT) ---
+        window.simpanProduk = () => {
+            const kat = document.getElementById('f-kategori').value;
+            const sku = document.getElementById('f-sku').value;
+            const nama = document.getElementById('f-nama').value;
+            const harga = document.getElementById('f-harga').value;
+            const jalur = document.getElementById('f-jalur').value;
 
-        <div class="px-5 -mt-6 pb-24 relative z-20">
-            <div class="bg-[#1e293b] p-2 rounded-xl border border-gray-700 shadow-lg flex gap-2 mb-6">
-                <button onclick="load('riwayat')" class="flex-1 bg-gray-800 py-3 rounded-lg text-xs font-bold hover:bg-gray-700 border border-gray-700">RIWAYAT TRX</button>
-                <button onclick="viewHarga()" class="flex-1 bg-yellow-600 py-3 rounded-lg text-xs font-bold hover:bg-yellow-500 text-black">CEK HARGA</button>
-            </div>
+            if(!sku || !nama || !harga) return alert("Data tidak boleh kosong!");
 
-            <h3 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest px-1">Aktivitas Terakhir</h3>
-            <div id="list" class="space-y-3">
-                <p class="text-center text-gray-600 text-xs py-10 italic">Memuat data...</p>
-            </div>
-        </div>
-    </div>
+            set(ref(db, 'produk/' + kat + '/' + sku), {
+                sku: sku, nama: nama, harga: parseInt(harga), jalur: jalur
+            }).then(() => {
+                alert("Data Berhasil Disimpan!");
+                document.getElementById('modal-form').classList.add('hidden');
+                resetForm();
+            });
+        };
 
-    <div id="modal-harga" class="hidden fixed inset-0 bg-[#0f172a]/95 z-[60] flex flex-col p-4 backdrop-blur-sm">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="font-bold text-yellow-500 text-lg italic">CEK HARGA MODAL</h3>
-            <button onclick="document.getElementById('modal-harga').classList.add('hidden')" class="bg-gray-800 p-2 rounded-full text-gray-400"><i class="fas fa-times"></i></button>
-        </div>
-        <input type="text" id="cari" onkeyup="cariHarga()" class="bg-[#1e293b] border border-gray-700 text-white p-4 rounded-xl w-full text-sm outline-none focus:border-yellow-500 mb-4 transition" placeholder="Ketik nama game (Min. 3 huruf)...">
-        <div id="list-harga" class="flex-1 overflow-y-auto space-y-2 pb-10 pr-1"></div>
-    </div>
+        // --- FUNGSI 2: HAPUS PRODUK ---
+        window.hapusProduk = (kat, sku) => {
+            if(confirm(`Yakin ingin menghapus ${sku}?`)) {
+                remove(ref(db, 'produk/' + kat + '/' + sku));
+            }
+        };
 
-    <script>
-        const PIN = "753357"; // Ganti PIN Anda di sini
-        let dbHarga = [];
+        // --- FUNGSI 3: PERSIAPAN EDIT ---
+        window.bukaEdit = (kat, sku, nama, harga, jalur) => {
+            document.getElementById('f-kategori').value = kat;
+            document.getElementById('f-sku').value = sku;
+            document.getElementById('f-nama').value = nama;
+            document.getElementById('f-harga').value = harga;
+            document.getElementById('f-jalur').value = jalur;
+            
+            document.getElementById('modal-title').innerText = "EDIT PRODUK";
+            document.getElementById('modal-form').classList.remove('hidden');
+        };
 
-        function auth() {
-            if (document.getElementById('pin').value === PIN) {
-                document.getElementById('login').classList.add('hidden');
-                document.getElementById('panel').classList.remove('hidden');
-                refreshData();
-            } else { alert("PIN SALAH!"); document.getElementById('pin').value = ""; }
+        // --- FUNGSI 4: UPDATE BANNER PROMO ---
+        window.updateBanner = () => {
+            const url = document.getElementById('url-banner').value;
+            if(!url) return alert("Link gambar kosong!");
+            set(ref(db, 'pengaturan/banner'), { url: url })
+            .then(() => alert("Banner Berhasil Diupdate!"));
+        };
+
+        function resetForm(){
+            document.getElementById('f-sku').value = "";
+            document.getElementById('f-nama').value = "";
+            document.getElementById('f-harga').value = "";
+            document.getElementById('modal-title').innerText = "TAMBAH PRODUK";
         }
 
-        function refreshData() {
-            load('cek_saldo_digi');
-            load('cek_saldo_api');
-            load('riwayat');
-        }
+        // --- REALTIME LISTENER (TAMPILKAN DATA) ---
+        onValue(ref(db, 'produk'), (snap) => {
+            const data = snap.val();
+            const list = document.getElementById('list-produk');
+            list.innerHTML = "";
+            if(!data) return list.innerHTML = "<p class='text-center text-gray-500 py-10'>Belum ada produk.</p>";
 
-        async function load(act) {
-            try {
-                // 1. DIGI SALDO
-                if (act === 'cek_saldo_digi') {
-                    const r = await fetch('/api/digi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'cek_saldo' }) });
-                    const d = await r.json();
-                    document.getElementById('saldo-digi').innerText = "Rp " + (d.data?.deposit || 0).toLocaleString('id-ID');
-                }
-                // 2. API GAMES SALDO
-                if (act === 'cek_saldo_api') {
-                    const r = await fetch('/api/apigames', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'cek_saldo' }) });
-                    const d = await r.json();
-                    const s = d.data?.saldo || d.data?.balance || 0;
-                    document.getElementById('saldo-api').innerText = "Rp " + parseInt(s).toLocaleString('id-ID');
-                }
-                // 3. RIWAYAT
-                if (act === 'riwayat') {
-                    const r = await fetch('/api/digi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'riwayat' }) });
-                    const d = await r.json();
-                    const data = (d.data || []).slice(0, 20); // Ambil 20 data terakhir
-                    
-                    // Hitung Laba (Asumsi 250 per trx sukses)
-                    const sukses = data.filter(i => i.status === 'Sukses').length;
-                    document.getElementById('laba').innerText = "Rp " + (sukses * 250).toLocaleString('id-ID');
-
-                    const list = document.getElementById('list');
-                    list.innerHTML = "";
-                    data.forEach(i => {
-                        const warna = i.status === 'Sukses' ? 'text-green-400 border-green-900/50 bg-green-900/10' : (i.status === 'Pending' ? 'text-yellow-400 border-yellow-900/50 bg-yellow-900/10' : 'text-red-400 border-red-900/50 bg-red-900/10');
-                        list.innerHTML += `
-                        <div class="p-4 rounded-xl border border-gray-700 bg-[#1e293b] flex justify-between items-center shadow-sm">
-                            <div>
-                                <p class="text-blue-400 font-bold text-xs uppercase mb-1">${i.buyer_sku_code}</p>
-                                <p class="text-[10px] text-gray-500 font-mono">${i.customer_no}</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="px-2 py-1 rounded text-[9px] font-bold border ${warna} uppercase">${i.status}</span>
-                                <p class="text-[9px] text-gray-600 mt-2">${i.create_date.split(' ')[1] || ''}</p>
-                            </div>
-                        </div>`;
-                    });
-                }
-                // 4. HARGA
-                if (act === 'harga') {
-                    const r = await fetch('/api/digi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'harga' }) });
-                    const d = await r.json();
-                    dbHarga = d.data || [];
-                    document.getElementById('list-harga').innerHTML = "<p class='text-center text-gray-500 mt-10'>Data Siap! Ketik nama game...</p>";
-                }
-            } catch (e) { console.log(e); }
-        }
-
-        function viewHarga() { document.getElementById('modal-harga').classList.remove('hidden'); load('harga'); }
-        function cariHarga() {
-            const k = document.getElementById('cari').value.toLowerCase();
-            if (k.length < 3) return;
-            const h = dbHarga.filter(i => i.product_name.toLowerCase().includes(k) && i.buyer_product_status);
-            document.getElementById('list-harga').innerHTML = h.map(i => `
-            <div class="bg-[#1e293b] p-3 rounded-xl border border-gray-700 flex justify-between items-center">
-                <div>
-                    <p class="text-xs font-bold text-gray-200">${i.product_name}</p>
-                    <p class="text-[10px] text-yellow-600 font-mono mt-1">${i.buyer_sku_code}</p>
-                </div>
-                <span class="text-green-400 font-bold text-sm bg-black/30 px-3 py-1 rounded-lg">Rp ${i.price.toLocaleString()}</span>
-            </div>`).join('');
-        }
+            Object.keys(data).forEach(kategori => {
+                Object.values(data[kategori]).forEach(p => {
+                    list.innerHTML += `
+                    <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex justify-between items-center mb-3 shadow-md">
+                        <div>
+                            <span class="bg-blue-900 text-blue-300 text-[9px] px-2 py-1 rounded-md font-bold uppercase">${kategori}</span>
+                            <p class="font-bold text-white text-sm mt-1">${p.nama}</p>
+                            <p class="text-[10px] text-gray-400 font-mono">Rp ${p.harga.toLocaleString()} | ${p.jalur}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="bukaEdit('${kategori}','${p.sku}','${p.nama}','${p.harga}','${p.jalur}')" class="bg-yellow-500/10 text-yellow-500 p-3 rounded-xl hover:bg-yellow-500 hover:text-white transition"><i class="fas fa-edit"></i></button>
+                            <button onclick="hapusProduk('${kategori}','${p.sku}')" class="bg-red-500/10 text-red-500 p-3 rounded-xl hover:bg-red-500 hover:text-white transition"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+            });
+        });
     </script>
+</head>
+<body class="bg-[#0f172a] text-white font-sans min-h-screen pb-20">
+
+    <div class="bg-blue-600 p-6 rounded-b-[2.5rem] shadow-xl mb-6 sticky top-0 z-40">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="font-black italic text-2xl tracking-tighter">DASHBOARD</h1>
+                <p class="text-[10px] uppercase opacity-80 tracking-widest">Admin Control Panel</p>
+            </div>
+            <button onclick="location.reload()" class="bg-white/20 p-2 rounded-full"><i class="fas fa-sync-alt animate-spin-slow"></i></button>
+        </div>
+    </div>
+
+    <div class="px-5 mb-6">
+        <div class="bg-slate-800 p-5 rounded-[2rem] border border-slate-700 shadow-lg">
+            <h3 class="text-[10px] font-bold text-gray-400 uppercase mb-3 tracking-widest"><i class="fas fa-image mr-1"></i> Atur Banner Depan</h3>
+            <div class="flex gap-2">
+                <input id="url-banner" class="w-full bg-slate-900 p-3 rounded-xl text-xs border border-slate-600 outline-none" placeholder="Tempel URL Gambar di sini...">
+                <button onclick="updateBanner()" class="bg-blue-600 px-4 rounded-xl font-bold text-xs"><i class="fas fa-save"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-5 mb-4">
+        <button onclick="document.getElementById('modal-form').classList.remove('hidden')" class="w-full bg-green-500 hover:bg-green-600 py-4 rounded-2xl font-black italic shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
+            <i class="fas fa-plus-circle text-xl"></i> TAMBAH PRODUK BARU
+        </button>
+    </div>
+
+    <div class="px-5">
+        <h3 class="text-[10px] font-bold text-gray-500 uppercase mb-3 px-1 tracking-widest">Database Produk Aktif</h3>
+        <div id="list-produk"></div>
+    </div>
+
+    <div id="modal-form" class="hidden fixed inset-0 bg-black/90 z-[60] flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-slate-800 p-6 rounded-[2rem] w-full max-w-sm border border-slate-600 shadow-2xl relative">
+            <button onclick="document.getElementById('modal-form').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+            <h3 id="modal-title" class="font-black text-center text-xl italic mb-6 text-white">TAMBAH PRODUK</h3>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <select id="f-kategori" class="bg-slate-900 p-3 rounded-xl text-sm border border-slate-600 outline-none"><option value="ml">Mobile Legends</option><option value="ff">Free Fire</option><option value="pubg">PUBG Mobile</option></select>
+                    <input id="f-sku" class="bg-slate-900 p-3 rounded-xl text-sm border border-slate-600 outline-none" placeholder="SKU (Cth: ML5)">
+                </div>
+                <input id="f-nama" class="w-full bg-slate-900 p-3 rounded-xl text-sm border border-slate-600 outline-none" placeholder="Nama Produk (Cth: 5 Diamonds)">
+                <input id="f-harga" type="number" class="w-full bg-slate-900 p-3 rounded-xl text-sm border border-slate-600 outline-none" placeholder="Harga Jual (Rp)">
+                <select id="f-jalur" class="w-full bg-slate-900 p-3 rounded-xl text-sm border border-slate-600 outline-none"><option value="digi">Server: Digiflazz</option><option value="api">Server: API Games</option></select>
+                
+                <button onclick="simpanProduk()" class="w-full bg-blue-600 py-4 rounded-xl font-bold shadow-lg shadow-blue-500/30 mt-4">SIMPAN DATA</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
