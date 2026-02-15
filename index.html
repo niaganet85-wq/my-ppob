@@ -3,180 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIAGA DIGITAL - Top Up Games</title>
+    <title>GAME KU - Top Up Murah</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .hidden { display: none; }
-        .active-scale:active { transform: scale(0.95); transition: 0.1s; }
-        .game-icon { object-fit: contain; }
-    </style>
+    <style>.hidden { display: none; } .active-scale:active { transform: scale(0.95); }</style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans pb-10">
 
-    <nav class="bg-blue-600 p-4 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-gamepad text-2xl"></i>
-                <h1 class="text-lg font-black italic tracking-tighter">NIAGA DIGITAL</h1>
-            </div>
-            <a href="https://wa.me/6285371178655" class="bg-green-500 hover:bg-green-600 px-4 py-1.5 rounded-full text-[10px] font-bold shadow-md transition">
-                <i class="fab fa-whatsapp mr-1"></i> BANTUAN
-            </a>
+    <nav class="bg-blue-600 p-4 text-white shadow-lg sticky top-0 z-50 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <i class="fas fa-gamepad text-2xl"></i>
+            <h1 class="text-lg font-black italic tracking-tighter">GAME KU</h1>
         </div>
+        <a href="https://wa.me/6285371178655" class="bg-green-500 px-3 py-1 rounded-full text-[10px] font-bold shadow-md">BANTUAN</a>
     </nav>
 
     <div id="halaman-menu" class="container mx-auto px-4 py-6">
-        
-        <div class="relative w-full overflow-hidden rounded-[1.5rem] mb-8 shadow-lg h-40 bg-gray-200">
-            <div id="slider-wrapper" class="flex transition-transform duration-500 ease-in-out h-full">
-                </div>
+        <div class="relative w-full overflow-hidden rounded-2xl mb-8 shadow-lg h-40 bg-gray-200">
+            <div id="slider-wrapper" class="flex transition-transform duration-500 ease-in-out h-full"></div>
         </div>
 
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Game Populer</h3>
-        </div>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Pilih Game</h3>
         
         <div class="grid grid-cols-3 gap-4 text-center">
-            <div onclick="bukaOrder('Mobile Legends', 'ml', 'ID (Server)')" class="active-scale cursor-pointer group">
-                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2 h-20 flex items-center justify-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cf/Mobile_Legends_Bang_Bang_logo.png/220px-Mobile_Legends_Bang_Bang_logo.png" class="w-14 h-14 game-icon" alt="MLBB">
-                </div>
-                <span class="text-[10px] font-bold text-gray-600">MLBB</span>
+            <div onclick="bukaOrder('Mobile Legends', 'ml', 'ID (Server)')" class="active-scale cursor-pointer bg-white p-3 rounded-2xl shadow-sm border h-28 flex flex-col items-center justify-center">
+                <img src="https://seeklogo.com/images/M/mobile-legends-bang-bang-logo-3A26E92043-seeklogo.com.png" class="w-10 h-10 object-contain mb-2"><span class="text-[10px] font-bold">MLBB</span>
             </div>
-
-            <div onclick="bukaOrder('Free Fire', 'ff', 'ID Player')" class="active-scale cursor-pointer group">
-                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2 h-20 flex items-center justify-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a6/Garena_Free_Fire_Logo.svg/1200px-Garena_Free_Fire_Logo.svg.png" class="w-14 h-14 game-icon" alt="FF">
-                </div>
-                <span class="text-[10px] font-bold text-gray-600">Free Fire</span>
+            <div onclick="bukaOrder('Free Fire', 'ff', 'ID Player')" class="active-scale cursor-pointer bg-white p-3 rounded-2xl shadow-sm border h-28 flex flex-col items-center justify-center">
+                <img src="https://upload.wikimedia.org/wikipedia/en/a/a6/Garena_Free_Fire_Logo.svg" class="w-10 h-10 object-contain mb-2"><span class="text-[10px] font-bold">Free Fire</span>
             </div>
-
-            <div onclick="bukaOrder('PUBG Mobile', 'pubg', 'ID Karakter')" class="active-scale cursor-pointer group">
-                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2 h-20 flex items-center justify-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7b/PUBG_Mobile_Logo.svg/1200px-PUBG_Mobile_Logo.svg.png" class="w-14 h-14 game-icon" alt="PUBG">
-                </div>
-                <span class="text-[10px] font-bold text-gray-600">PUBG</span>
+            <div onclick="bukaOrder('PUBG Mobile', 'pubg', 'ID Karakter')" class="active-scale cursor-pointer bg-white p-3 rounded-2xl shadow-sm border h-28 flex flex-col items-center justify-center">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7b/PUBG_Mobile_Logo.svg/1200px-PUBG_Mobile_Logo.svg.png" class="w-10 h-10 object-contain mb-2"><span class="text-[10px] font-bold">PUBG</span>
             </div>
-
-            <div onclick="bukaOrder('Arena of Valor', 'aov', 'ID Player')" class="active-scale cursor-pointer group">
-                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2 h-20 flex items-center justify-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/52/Arena_of_Valor_logo.svg/1200px-Arena_of_Valor_logo.svg.png" class="w-14 h-14 game-icon" alt="AOV">
-                </div>
-                <span class="text-[10px] font-bold text-gray-600">AOV</span>
+            <div onclick="bukaOrder('Arena of Valor', 'aov', 'ID Player')" class="active-scale cursor-pointer bg-white p-3 rounded-2xl shadow-sm border h-28 flex flex-col items-center justify-center">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/52/Arena_of_Valor_logo.svg/1200px-Arena_of_Valor_logo.svg.png" class="w-10 h-10 object-contain mb-2"><span class="text-[10px] font-bold">AOV</span>
             </div>
-
-            <div onclick="bukaOrder('Genshin Impact', 'gi', 'UID (Server)')" class="active-scale cursor-pointer group">
-                <div class="bg-white p-3 rounded-3xl shadow-sm border border-gray-100 group-hover:border-blue-400 transition mb-2 h-20 flex items-center justify-center">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Genshin_Impact_logo.svg/1200px-Genshin_Impact_logo.svg.png" class="w-14 h-14 game-icon" alt="Genshin">
-                </div>
-                <span class="text-[10px] font-bold text-gray-600">Genshin</span>
+            <div onclick="bukaOrder('Genshin Impact', 'gi', 'UID (Server)')" class="active-scale cursor-pointer bg-white p-3 rounded-2xl shadow-sm border h-28 flex flex-col items-center justify-center">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Genshin_Impact_logo.svg/1200px-Genshin_Impact_logo.svg.png" class="w-10 h-10 object-contain mb-2"><span class="text-[10px] font-bold">Genshin</span>
             </div>
         </div>
     </div>
 
-    <div id="halaman-order" class="container mx-auto px-4 py-6 hidden">
-        <button onclick="kembali()" class="bg-white px-5 py-2 rounded-full shadow-sm text-gray-600 text-[10px] font-bold mb-6 border border-gray-200 active:scale-95 transition">
-            <i class="fas fa-arrow-left mr-2"></i> KEMBALI
-        </button>
-
-        <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100 mb-6">
-            <h3 id="judul-game" class="text-xl font-black text-blue-600 mb-4 italic tracking-tighter uppercase">TOP UP</h3>
-            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label class="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">ID Tujuan</label>
-                <input type="tel" id="target" class="w-full bg-transparent border-b-2 border-gray-300 py-2 text-lg font-bold text-gray-800 outline-none focus:border-blue-500 transition placeholder-gray-300" placeholder="Masukkan ID...">
-            </div>
-            <p id="info-id" class="text-[9px] mt-3 text-orange-500 font-medium italic">*Pastikan ID benar.</p>
+    <div id="halaman-order" class="hidden container mx-auto px-4 py-6">
+        <button onclick="location.reload()" class="bg-white px-5 py-2 rounded-full shadow-sm text-gray-600 text-[10px] font-bold mb-6 border">KEMBALI</button>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border mb-6">
+            <h3 id="judul-game" class="text-xl font-black text-blue-600 mb-4 uppercase">TOP UP</h3>
+            <input type="tel" id="target" class="w-full bg-transparent border-b-2 py-2 text-lg font-bold outline-none" placeholder="Masukkan ID...">
         </div>
-
-        <h3 class="text-[10px] font-bold text-gray-400 mb-4 uppercase tracking-widest">Pilih Item</h3>
         <div id="list-produk" class="space-y-3 pb-10"></div>
     </div>
 
     <script>
         const UNTUNG = 250; 
-        const NOMOR_WA_ADMIN = "6285371178655";
-
-        // DATABASE PRODUK MANUAL (Sesuaikan harga modal dengan Digiflazz Anda)
-        const DB_PRODUK = {
+        const WA = "6285371178655";
+        
+        // DATABASE PRODUK
+        const DB = {
             'ml': [
-                { sku: 'ML5', nama: '5 Diamonds', modal: 1450 },
-                { sku: 'ML12', nama: '12 Diamonds', modal: 3400 },
-                { sku: 'ML28', nama: '28 Diamonds', modal: 7800 },
-                { sku: 'ML59', nama: '59 Diamonds', modal: 15500 },
-                { sku: 'ML85', nama: '85 Diamonds', modal: 22000 }
+                {sku:'ML5', nama:'5 Diamonds', modal:1450, jalur:'digi'},
+                {sku:'ML86', nama:'86 Diamonds', modal:21000, jalur:'api'} 
             ],
-            'ff': [
-                { sku: 'FF5', nama: '5 Diamonds', modal: 800 },
-                { sku: 'FF50', nama: '50 Diamonds', modal: 6200 },
-                { sku: 'FF70', nama: '70 Diamonds', modal: 8900 },
-                { sku: 'FF140', nama: '140 Diamonds', modal: 17500 }
-            ],
-            'pubg': [
-                { sku: 'PUBG35', nama: '35 UC', modal: 7100 },
-                { sku: 'PUBG50', nama: '50 UC', modal: 10000 }
-            ],
-            'aov': [ { sku: 'AOV40', nama: '40 Vouchers', modal: 9500 } ],
-            'gi': [ { sku: 'GI60', nama: '60 Genesis', modal: 11500 } ]
+            'ff': [{sku:'FF50', nama:'50 Diamonds', modal:6200, jalur:'digi'}]
         };
 
         function muatBanner() {
-            const defaultBanners = [
-                "https://img.freepik.com/free-vector/gaming-banner-template-with-flat-design_23-2148902691.jpg",
-                "https://img.freepik.com/free-vector/esports-gaming-banner-template-with-abstract-background_23-2148897538.jpg"
-            ];
-            const savedBanners = JSON.parse(localStorage.getItem('niaga_banners')) || defaultBanners;
-            const wrapper = document.getElementById('slider-wrapper');
-            wrapper.innerHTML = savedBanners.map(img => `<img src="${img}" class="w-full flex-shrink-0 h-full object-cover">`).join('');
-            
-            let i = 0;
-            setInterval(() => {
-                i = (i + 1) % savedBanners.length;
-                wrapper.style.transform = `translateX(-${i * 100}%)`;
-            }, 3500);
+            const b = JSON.parse(localStorage.getItem('gameku_banners')) || ["https://img.freepik.com/free-vector/gaming-banner-template-with-flat-design_23-2148902691.jpg"];
+            const w = document.getElementById('slider-wrapper'); w.innerHTML = b.map(i=>`<img src="${i}" class="w-full h-full object-cover flex-shrink-0">`).join('');
+            let c=0; setInterval(()=>{ c=(c+1)%b.length; w.style.transform=`translateX(-${c*100}%)`; }, 3500);
         }
 
-        function bukaOrder(namaGame, kodeGame, placeholderID) {
-            document.getElementById('halaman-menu').classList.add('hidden');
-            document.getElementById('halaman-order').classList.remove('hidden');
-            document.getElementById('judul-game').innerText = "TOP UP " + namaGame.toUpperCase();
-            document.getElementById('target').placeholder = placeholderID;
-            window.scrollTo(0,0);
-            renderProduk(kodeGame, namaGame);
-        }
-
-        function kembali() {
-            document.getElementById('halaman-order').classList.add('hidden');
-            document.getElementById('halaman-menu').classList.remove('hidden');
-        }
-
-        function renderProduk(kode, namaGame) {
-            const list = document.getElementById('list-produk');
-            list.innerHTML = "";
-            const produk = DB_PRODUK[kode] || [];
-
-            produk.forEach(p => {
-                const hargaJual = p.modal + UNTUNG;
-                list.innerHTML += `
-                <div onclick="kirimPesanan('${namaGame}', '${p.nama}', ${hargaJual})" class="active-scale bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center cursor-pointer hover:border-blue-400 transition group">
-                    <div>
-                        <p class="font-bold text-gray-700 text-sm group-hover:text-blue-600">${p.nama}</p>
-                        <p class="text-[9px] text-gray-400 italic">Klik untuk beli</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-blue-600 font-black text-sm">Rp ${hargaJual.toLocaleString('id-ID')}</p>
-                    </div>
-                </div>`;
+        function bukaOrder(g,k,p) {
+            document.getElementById('halaman-menu').classList.add('hidden'); document.getElementById('halaman-order').classList.remove('hidden');
+            document.getElementById('judul-game').innerText=g; document.getElementById('target').placeholder=p;
+            const l = document.getElementById('list-produk'); l.innerHTML="";
+            (DB[k]||[]).forEach(d => {
+                const h = d.modal + UNTUNG;
+                l.innerHTML += `<div onclick="pesan('${g}','${d.nama}',${h})" class="bg-white p-4 rounded-2xl border flex justify-between items-center cursor-pointer mb-2"><div><p class="font-bold text-sm">${d.nama}</p><p class="text-[9px] text-gray-400">Server: ${d.jalur.toUpperCase()}</p></div><p class="text-blue-600 font-black text-sm">Rp ${h.toLocaleString()}</p></div>`;
             });
         }
-
-        function kirimPesanan(game, item, harga) {
-            const idTujuan = document.getElementById('target').value;
-            if(!idTujuan) return alert("Harap masukkan ID Game!");
-            const pesan = `Halo Kak, saya mau Top Up:\n\n🎮 Game: ${game}\n💎 Item: ${item}\n🆔 ID: ${idTujuan}\n💰 Harga: Rp ${harga.toLocaleString('id-ID')}\n\nMohon diproses ya kak!`;
-            window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${encodeURIComponent(pesan)}`, '_blank');
+        function pesan(g,i,h) {
+            const t = document.getElementById('target').value; if(!t) return alert("Isi ID dulu!");
+            window.open(`https://wa.me/${WA}?text=${encodeURIComponent(`Halo Admin GAME KU, order:\nGame: ${g}\nItem: ${i}\nID: ${t}\nBayar: Rp ${h.toLocaleString()}`)}`, '_blank');
         }
-
         muatBanner();
     </script>
 </body>
