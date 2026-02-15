@@ -3,182 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADMIN SUPER - GAME KU</title>
+    <title>ADMIN GAME KU - PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>.hidden{display:none} .glass{background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.2);}</style>
+    <style>.hidden{display:none} .glass{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);}</style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen font-sans">
+<body class="bg-[#0f172a] text-gray-200 font-sans min-h-screen">
 
-    <div id="login" class="fixed inset-0 flex items-center justify-center bg-gray-900 z-50">
-        <div class="bg-gray-800 p-8 rounded-2xl w-80 text-center border border-gray-700 shadow-2xl">
-            <h2 class="text-2xl font-black mb-6 text-blue-500 italic">ADMIN ACCESS</h2>
-            <input type="password" id="pin" class="w-full bg-gray-700 p-4 rounded-xl mb-4 text-center text-2xl tracking-[5px] outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••" maxlength="6">
-            <button onclick="auth()" class="w-full bg-blue-600 py-3 rounded-xl font-bold hover:bg-blue-500 transition">BUKA PANEL</button>
+    <div id="login" class="fixed inset-0 flex items-center justify-center bg-[#0f172a] z-50">
+        <div class="bg-[#1e293b] p-8 rounded-2xl w-80 text-center border border-gray-700 shadow-2xl">
+            <i class="fas fa-user-shield text-4xl text-blue-500 mb-4"></i>
+            <h2 class="text-xl font-bold mb-6 text-white">LOGIN OWNER</h2>
+            <input type="password" id="pin" class="w-full bg-[#0f172a] p-4 rounded-xl mb-4 text-center text-2xl tracking-[5px] outline-none focus:border-blue-500 border border-gray-700" placeholder="••••••" maxlength="6">
+            <button onclick="auth()" class="w-full bg-blue-600 hover:bg-blue-500 py-3 rounded-xl font-bold transition">MASUK PANEL</button>
         </div>
     </div>
 
     <div id="panel" class="hidden">
-        <div class="bg-gradient-to-b from-blue-700 to-blue-900 p-6 rounded-b-[2rem] shadow-lg mb-6">
-            <div class="flex justify-between items-center mb-6">
+        <div class="bg-blue-600 p-6 pb-10 rounded-b-[2.5rem] shadow-lg relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-chart-line text-9xl"></i></div>
+            <div class="flex justify-between items-center mb-6 relative z-10">
                 <div>
-                    <h1 class="font-black italic text-2xl tracking-tighter">DASHBOARD</h1>
-                    <p class="text-xs text-blue-200 opacity-80">Monitoring Realtime</p>
+                    <h1 class="font-black italic text-2xl tracking-tighter text-white">GAME KU</h1>
+                    <p class="text-xs text-blue-200">Admin Dashboard</p>
                 </div>
-                <button onclick="refreshSemua()" class="bg-white/20 p-3 rounded-full hover:rotate-180 transition duration-700"><i class="fas fa-sync-alt"></i></button>
+                <button onclick="refreshData()" class="bg-white/20 p-3 rounded-full hover:rotate-180 transition duration-700 text-white"><i class="fas fa-sync-alt"></i></button>
             </div>
 
-            <div class="space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                    <div class="glass p-4 rounded-2xl">
-                        <div class="flex items-center gap-2 mb-1">
-                            <i class="fas fa-wallet text-yellow-400 text-xs"></i>
-                            <p class="text-[10px] uppercase font-bold text-gray-300">Digiflazz</p>
-                        </div>
-                        <h2 id="saldo-digi" class="text-sm font-bold">Rp 0</h2>
-                    </div>
-                    <div class="glass p-4 rounded-2xl">
-                        <div class="flex items-center gap-2 mb-1">
-                            <i class="fas fa-gamepad text-purple-400 text-xs"></i>
-                            <p class="text-[10px] uppercase font-bold text-gray-300">API Games</p>
-                        </div>
-                        <h2 id="saldo-api" class="text-sm font-bold">Rp 0</h2>
-                    </div>
+            <div class="grid grid-cols-2 gap-3 relative z-10">
+                <div class="glass p-4 rounded-2xl bg-white/10">
+                    <p class="text-[10px] uppercase font-bold text-blue-200 mb-1">Saldo Digiflazz</p>
+                    <h2 id="saldo-digi" class="text-lg font-bold text-white">Rp 0</h2>
                 </div>
-
-                <div class="glass p-4 rounded-2xl border-yellow-500/30 bg-yellow-900/10">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <p class="text-[10px] uppercase font-bold text-yellow-500">Estimasi Laba Hari Ini</p>
-                            <h2 id="laba" class="text-xl font-black text-white mt-1">Rp 0</h2>
-                        </div>
-                        <i class="fas fa-chart-line text-2xl text-yellow-500 opacity-50"></i>
-                    </div>
+                <div class="glass p-4 rounded-2xl bg-white/10">
+                    <p class="text-[10px] uppercase font-bold text-purple-200 mb-1">Saldo API Games</p>
+                    <h2 id="saldo-api" class="text-lg font-bold text-white">Rp 0</h2>
                 </div>
+            </div>
+            <div class="glass mt-3 p-3 rounded-xl bg-green-500/20 border-green-500/30 flex justify-between items-center relative z-10">
+                <span class="text-xs font-bold text-green-300">Estimasi Laba Hari Ini:</span>
+                <span id="laba" class="font-black text-green-300">Rp 0</span>
             </div>
         </div>
 
-        <div class="px-4 pb-24">
-            <h3 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Menu Kontrol</h3>
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <button onclick="load('riwayat')" class="bg-gray-800 p-3 rounded-xl border border-gray-700 hover:bg-gray-700 text-left">
-                    <i class="fas fa-history text-blue-400 mb-2"></i>
-                    <p class="text-xs font-bold">Riwayat Trx</p>
-                </button>
-                <button onclick="viewHarga()" class="bg-gray-800 p-3 rounded-xl border border-gray-700 hover:bg-gray-700 text-left">
-                    <i class="fas fa-tags text-green-400 mb-2"></i>
-                    <p class="text-xs font-bold">Cek Harga</p>
-                </button>
+        <div class="px-5 -mt-6 pb-24 relative z-20">
+            <div class="bg-[#1e293b] p-2 rounded-xl border border-gray-700 shadow-lg flex gap-2 mb-6">
+                <button onclick="load('riwayat')" class="flex-1 bg-gray-800 py-3 rounded-lg text-xs font-bold hover:bg-gray-700 border border-gray-700">RIWAYAT TRX</button>
+                <button onclick="viewHarga()" class="flex-1 bg-yellow-600 py-3 rounded-lg text-xs font-bold hover:bg-yellow-500 text-black">CEK HARGA</button>
             </div>
 
-            <h3 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest">Transaksi Terakhir</h3>
-            <div id="list" class="space-y-2 pb-10">
-                <p class="text-center text-xs text-gray-600 italic py-4">Belum ada data dimuat...</p>
+            <h3 class="text-xs font-bold text-gray-500 mb-3 uppercase tracking-widest px-1">Aktivitas Terakhir</h3>
+            <div id="list" class="space-y-3">
+                <p class="text-center text-gray-600 text-xs py-10 italic">Memuat data...</p>
             </div>
         </div>
     </div>
 
-    <div id="modal-harga" class="hidden fixed inset-0 bg-gray-900 z-[60] flex flex-col">
-        <div class="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center shadow-md">
-            <h3 class="font-bold text-yellow-500 italic">DATABASE HARGA</h3>
-            <button onclick="document.getElementById('modal-harga').classList.add('hidden')" class="bg-red-500/20 text-red-500 px-3 py-1 rounded-full text-xs font-bold">Tutup</button>
+    <div id="modal-harga" class="hidden fixed inset-0 bg-[#0f172a]/95 z-[60] flex flex-col p-4 backdrop-blur-sm">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-yellow-500 text-lg italic">CEK HARGA MODAL</h3>
+            <button onclick="document.getElementById('modal-harga').classList.add('hidden')" class="bg-gray-800 p-2 rounded-full text-gray-400"><i class="fas fa-times"></i></button>
         </div>
-        <div class="p-4 bg-gray-900">
-            <input type="text" id="cari" onkeyup="cariHarga()" class="bg-gray-800 border border-gray-700 text-white p-3 rounded-xl w-full text-sm outline-none focus:border-yellow-500 transition" placeholder="Ketik nama game (Min. 3 huruf)...">
-        </div>
-        <div id="list-harga" class="flex-1 overflow-y-auto p-4 space-y-2 pb-20"></div>
+        <input type="text" id="cari" onkeyup="cariHarga()" class="bg-[#1e293b] border border-gray-700 text-white p-4 rounded-xl w-full text-sm outline-none focus:border-yellow-500 mb-4 transition" placeholder="Ketik nama game (Min. 3 huruf)...">
+        <div id="list-harga" class="flex-1 overflow-y-auto space-y-2 pb-10 pr-1"></div>
     </div>
 
     <script>
-        const PIN = "753357"; 
+        const PIN = "753357"; // Ganti PIN Anda di sini
         let dbHarga = [];
 
-        function auth(){ 
-            if(document.getElementById('pin').value === PIN){
+        function auth() {
+            if (document.getElementById('pin').value === PIN) {
                 document.getElementById('login').classList.add('hidden');
                 document.getElementById('panel').classList.remove('hidden');
-                refreshSemua();
-            } else { alert("PIN SALAH!"); document.getElementById('pin').value=""; } 
+                refreshData();
+            } else { alert("PIN SALAH!"); document.getElementById('pin').value = ""; }
         }
 
-        function refreshSemua() {
+        function refreshData() {
             load('cek_saldo_digi');
             load('cek_saldo_api');
             load('riwayat');
         }
 
-        async function load(act){
+        async function load(act) {
             try {
-                // 1. CEK SALDO DIGIFLAZZ
-                if(act === 'cek_saldo_digi'){
-                    const r = await fetch('/api/digi', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'cek_saldo'})});
+                // 1. DIGI SALDO
+                if (act === 'cek_saldo_digi') {
+                    const r = await fetch('/api/digi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'cek_saldo' }) });
                     const d = await r.json();
                     document.getElementById('saldo-digi').innerText = "Rp " + (d.data?.deposit || 0).toLocaleString('id-ID');
                 }
-
-                // 2. CEK SALDO API GAMES (BARU)
-                if(act === 'cek_saldo_api'){
-                    const r = await fetch('/api/apigames', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'cek_saldo'})});
+                // 2. API GAMES SALDO
+                if (act === 'cek_saldo_api') {
+                    const r = await fetch('/api/apigames', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'cek_saldo' }) });
                     const d = await r.json();
-                    // Sesuaikan dengan respon API Games (biasanya d.data.saldo atau d.balance)
-                    // Kita ambil data aman:
-                    const saldoApi = d.data?.saldo || d.data?.balance || d.balance || 0; 
-                    document.getElementById('saldo-api').innerText = "Rp " + parseInt(saldoApi).toLocaleString('id-ID');
+                    const s = d.data?.saldo || d.data?.balance || 0;
+                    document.getElementById('saldo-api').innerText = "Rp " + parseInt(s).toLocaleString('id-ID');
                 }
-
-                // 3. RIWAYAT & LABA
-                if(act === 'riwayat'){
-                    const r = await fetch('/api/digi', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'riwayat'})});
+                // 3. RIWAYAT
+                if (act === 'riwayat') {
+                    const r = await fetch('/api/digi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'riwayat' }) });
                     const d = await r.json();
-                    const data = d.data || [];
+                    const data = (d.data || []).slice(0, 20); // Ambil 20 data terakhir
                     
-                    // Hitung Laba (Asumsi untung 250 per trx sukses)
+                    // Hitung Laba (Asumsi 250 per trx sukses)
                     const sukses = data.filter(i => i.status === 'Sukses').length;
                     document.getElementById('laba').innerText = "Rp " + (sukses * 250).toLocaleString('id-ID');
 
-                    // Render List
                     const list = document.getElementById('list');
                     list.innerHTML = "";
-                    data.slice(0, 10).forEach(i => { // Ambil 10 terakhir
-                        const warna = i.status === 'Sukses' ? 'text-green-400' : (i.status === 'Pending' ? 'text-yellow-400' : 'text-red-400');
+                    data.forEach(i => {
+                        const warna = i.status === 'Sukses' ? 'text-green-400 border-green-900/50 bg-green-900/10' : (i.status === 'Pending' ? 'text-yellow-400 border-yellow-900/50 bg-yellow-900/10' : 'text-red-400 border-red-900/50 bg-red-900/10');
                         list.innerHTML += `
-                        <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 flex justify-between items-center shadow-sm">
+                        <div class="p-4 rounded-xl border border-gray-700 bg-[#1e293b] flex justify-between items-center shadow-sm">
                             <div>
                                 <p class="text-blue-400 font-bold text-xs uppercase mb-1">${i.buyer_sku_code}</p>
-                                <p class="text-[10px] text-gray-400 font-mono">${i.customer_no}</p>
+                                <p class="text-[10px] text-gray-500 font-mono">${i.customer_no}</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-[10px] font-bold ${warna} uppercase bg-gray-900 px-2 py-1 rounded-md border border-gray-600">${i.status}</p>
-                                <p class="text-[9px] text-gray-500 mt-1">${i.create_date || ''}</p>
+                                <span class="px-2 py-1 rounded text-[9px] font-bold border ${warna} uppercase">${i.status}</span>
+                                <p class="text-[9px] text-gray-600 mt-2">${i.create_date.split(' ')[1] || ''}</p>
                             </div>
                         </div>`;
                     });
                 }
-                
-                // 4. CEK HARGA
-                if(act === 'harga'){
-                    const r = await fetch('/api/digi', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'harga'})});
+                // 4. HARGA
+                if (act === 'harga') {
+                    const r = await fetch('/api/digi', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'harga' }) });
                     const d = await r.json();
                     dbHarga = d.data || [];
-                    document.getElementById('list-harga').innerHTML = "<p class='text-center mt-10 text-gray-500'>Data Siap. Silakan cari...</p>";
+                    document.getElementById('list-harga').innerHTML = "<p class='text-center text-gray-500 mt-10'>Data Siap! Ketik nama game...</p>";
                 }
-
-            } catch(e){ console.log(e); }
+            } catch (e) { console.log(e); }
         }
 
-        function viewHarga(){ document.getElementById('modal-harga').classList.remove('hidden'); load('harga'); }
-        
-        function cariHarga(){
+        function viewHarga() { document.getElementById('modal-harga').classList.remove('hidden'); load('harga'); }
+        function cariHarga() {
             const k = document.getElementById('cari').value.toLowerCase();
-            if(k.length < 3) return;
+            if (k.length < 3) return;
             const h = dbHarga.filter(i => i.product_name.toLowerCase().includes(k) && i.buyer_product_status);
             document.getElementById('list-harga').innerHTML = h.map(i => `
-            <div class="bg-gray-800 p-3 rounded-xl border border-gray-700 flex justify-between items-center mb-2">
+            <div class="bg-[#1e293b] p-3 rounded-xl border border-gray-700 flex justify-between items-center">
                 <div>
-                    <p class="text-xs font-bold text-white">${i.product_name}</p>
-                    <p class="text-[10px] text-yellow-500">${i.buyer_sku_code}</p>
+                    <p class="text-xs font-bold text-gray-200">${i.product_name}</p>
+                    <p class="text-[10px] text-yellow-600 font-mono mt-1">${i.buyer_sku_code}</p>
                 </div>
-                <span class="text-green-400 font-bold text-sm bg-black/30 px-2 py-1 rounded-lg">Rp ${i.price.toLocaleString()}</span>
+                <span class="text-green-400 font-bold text-sm bg-black/30 px-3 py-1 rounded-lg">Rp ${i.price.toLocaleString()}</span>
             </div>`).join('');
         }
     </script>
