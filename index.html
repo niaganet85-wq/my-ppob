@@ -16,10 +16,17 @@
 
     <nav class="bg-blue-600 p-5 rounded-b-[2rem] shadow-xl sticky top-0 z-50 flex justify-between items-center text-white">
         <div class="flex items-center gap-2">
-            <div class="bg-white/20 p-2 rounded-lg"><i class="fas fa-gamepad text-xl"></i></div>
-            <div><h1 class="font-black italic tracking-tighter text-lg leading-none">GAME KU</h1><p class="text-[9px] opacity-80 uppercase tracking-widest">Top Up Terpercaya</p></div>
+            <div class="bg-white/20 p-2 rounded-xl overflow-hidden w-11 h-11 flex items-center justify-center border border-white/20">
+                <img id="logo-header" src="https://cdn-icons-png.flaticon.com/512/808/808439.png" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <h1 class="font-black italic tracking-tighter text-lg leading-none">GAME KU</h1>
+                <p class="text-[9px] opacity-80 uppercase tracking-widest">Top Up Terpercaya</p>
+            </div>
         </div>
-        <div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1"><div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div> ONLINE</div>
+        <div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1">
+            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div> ONLINE
+        </div>
     </nav>
 
     <div id="home-page" class="p-5">
@@ -32,14 +39,8 @@
         </div>
 
         <div id="container-info" class="hidden mb-6 bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center gap-3 shadow-sm">
-            <div class="bg-yellow-400 text-yellow-900 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 animate-pulse">
-                <i class="fas fa-bullhorn text-xs"></i>
-            </div>
-            <div class="w-full overflow-hidden whitespace-nowrap">
-                <marquee id="text-info-display" class="text-xs font-bold text-yellow-800" scrollamount="5">
-                    Memuat Info...
-                </marquee>
-            </div>
+            <div class="bg-yellow-400 text-yellow-900 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 animate-pulse"><i class="fas fa-bullhorn text-xs"></i></div>
+            <div class="w-full overflow-hidden whitespace-nowrap"><marquee id="text-info-display" class="text-xs font-bold text-yellow-800" scrollamount="5">...</marquee></div>
         </div>
 
         <div class="flex items-center justify-between mb-4 px-1">
@@ -79,36 +80,30 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- FITUR BARU: TEKS BERJALAN ---
-        onValue(ref(db, 'pengaturan/info_berjalan'), (snap) => {
+        // --- 1. LOAD LOGO HEADER (BARU) ---
+        onValue(ref(db, 'pengaturan/logo'), (snap) => {
             const data = snap.val();
-            const container = document.getElementById('container-info');
-            const textElement = document.getElementById('text-info-display');
-
-            if(data && data.text && data.text.trim() !== "") {
-                // Jika ada teks, tampilkan
-                container.classList.remove('hidden');
-                textElement.innerText = data.text;
-            } else {
-                // Jika kosong, sembunyikan kotaknya
-                container.classList.add('hidden');
-            }
+            if(data && data.url) document.getElementById('logo-header').src = data.url;
         });
 
-        // Banner Slider
+        // --- 2. FITUR LAIN ---
+        onValue(ref(db, 'pengaturan/info_berjalan'), (snap) => {
+            const data = snap.val(); const c=document.getElementById('container-info');
+            if(data && data.text && data.text.trim()!=="") { c.classList.remove('hidden'); document.getElementById('text-info-display').innerText=data.text; }
+            else { c.classList.add('hidden'); }
+        });
+
         onValue(ref(db, 'banners'), (snap) => {
             const data = snap.val(); const s=document.getElementById('slider-banner'); const i=document.getElementById('indikator-banner'); s.innerHTML=""; i.innerHTML="";
             if(data) { Object.values(data).forEach(b=>{ s.innerHTML+=`<img src="${b.url}" class="w-full h-full object-cover flex-shrink-0 snap-center bg-gray-100">`; i.innerHTML+=`<div class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm shadow-sm"></div>`; });
             let pos=0; setInterval(()=>{ pos+=s.offsetWidth; if(pos>=s.scrollWidth)pos=0; s.scrollTo({left:pos,behavior:'smooth'}); },4000); }
         });
 
-        // Game Grid
         onValue(ref(db, 'kategori_game'), (snap) => {
             const data = snap.val(); const g=document.getElementById('grid-game'); g.innerHTML="";
             if(data) Object.values(data).forEach(ga=>{ g.innerHTML+=`<div onclick="bukaGame('${ga.kode}','${ga.nama}')" class="active-scale bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-28 cursor-pointer"><img src="${ga.icon}" class="w-8 h-8 object-contain"><span class="text-[10px] font-bold text-center leading-tight text-gray-700 line-clamp-2">${ga.nama}</span></div>`; });
         });
 
-        // Produk
         window.bukaGame = (k,n) => { document.getElementById('home-page').classList.add('hidden'); document.getElementById('order-page').classList.remove('hidden'); document.getElementById('game-title').innerText=n; window.scrollTo(0,0);
             const l=document.getElementById('list-produk'); l.innerHTML="<div class='text-center py-20'><i class='fas fa-circle-notch fa-spin text-blue-500'></i></div>";
             onValue(ref(db,'produk/'+k),(s)=>{ const d=s.val(); l.innerHTML=""; if(!d)return l.innerHTML="<p class='text-center text-xs text-gray-400'>Kosong</p>"; Object.values(d).sort((a,b)=>a.harga-b.harga).forEach(p=>{ l.innerHTML+=`<div onclick="kirimPesanan('${p.nama}',${p.harga},'${n}')" class="active-scale bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm cursor-pointer"><div class="flex items-center gap-3"><div class="bg-blue-50 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs"><i class="fas fa-gem"></i></div><div><p class="font-bold text-gray-800 text-sm">${p.nama}</p></div></div><div class="text-right"><p class="text-blue-600 font-black text-sm">Rp ${p.harga.toLocaleString()}</p></div></div>`; }); });

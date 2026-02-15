@@ -17,12 +17,12 @@
     <div id="login-screen" class="fixed inset-0 z-[100] bg-[#0f172a] flex flex-col items-center justify-center p-6">
         <div class="bg-[#1e293b] p-8 rounded-[2rem] border border-slate-700 shadow-2xl w-full max-w-xs text-center">
             <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/50">
-                <i class="fas fa-lock text-2xl text-white"></i>
+                <i class="fas fa-user-shield text-2xl text-white"></i>
             </div>
-            <h2 class="text-xl font-black italic mb-2">ADMIN AREA</h2>
-            <p class="text-xs text-gray-400 mb-6">Masukkan PIN Keamanan.</p>
+            <h2 class="text-xl font-black italic mb-2">ADMIN LOGIN</h2>
+            <p class="text-xs text-gray-400 mb-6">Masukkan PIN: 956924</p>
             <input type="password" id="input-pin" class="w-full bg-[#0f172a] p-4 rounded-xl text-center text-lg font-bold tracking-[0.5em] border border-slate-600 outline-none focus:border-blue-500 transition mb-4 text-white placeholder-gray-600" placeholder="••••••" maxlength="6">
-            <button onclick="cekLogin()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold shadow-lg active:scale-95 transition">BUKA KUNCI</button>
+            <button onclick="cekLogin()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold shadow-lg active:scale-95 transition">BUKA DASHBOARD</button>
             <p id="pesan-error" class="text-red-500 text-[10px] font-bold mt-3 hidden animate-pulse">PIN SALAH!</p>
         </div>
     </div>
@@ -31,7 +31,7 @@
         
         <div class="bg-blue-600 pb-12 pt-6 px-6 rounded-b-[2.5rem] shadow-2xl relative z-10">
             <div class="flex justify-between items-center mb-6">
-                <div><h1 class="font-black italic text-2xl tracking-tighter">DASHBOARD</h1><p class="text-[10px] opacity-80 uppercase tracking-widest">Admin Control Panel</p></div>
+                <div><h1 class="font-black italic text-2xl tracking-tighter">DASHBOARD</h1><p class="text-[10px] opacity-80 uppercase tracking-widest">Control Panel</p></div>
                 <button onclick="logout()" class="bg-red-500/20 hover:bg-red-500 p-2 rounded-full transition text-white border border-white/20"><i class="fas fa-power-off"></i></button>
             </div>
             <div class="grid grid-cols-2 gap-3">
@@ -53,23 +53,31 @@
                 </button>
             </div>
 
-            <div class="bg-[#1e293b] p-5 rounded-[2rem] border border-slate-700 shadow-lg">
-                <h3 class="text-[10px] font-bold text-yellow-400 uppercase mb-3"><i class="fas fa-bullhorn mr-1"></i> Kelola Info Berjalan</h3>
+            <div class="bg-[#1e293b] p-5 rounded-[2rem] border border-slate-700 shadow-lg relative overflow-hidden">
+                <div class="absolute -right-5 -top-5 w-20 h-20 bg-pink-500/20 rounded-full blur-xl"></div>
+                <h3 class="text-[10px] font-bold text-pink-400 uppercase mb-3"><i class="fas fa-shapes mr-1"></i> Ganti Logo Header</h3>
                 <div class="flex gap-2">
-                    <input id="text-info" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none text-white placeholder-gray-500" placeholder="Tulis info gangguan / promo di sini...">
+                    <input id="url-logo" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none text-white placeholder-gray-500" placeholder="Link Gambar Logo (PNG/JPG)...">
+                    <button onclick="updateLogo()" class="bg-pink-600 hover:bg-pink-500 px-4 rounded-xl font-bold text-white shadow-lg"><i class="fas fa-save"></i></button>
+                </div>
+            </div>
+
+            <div class="bg-[#1e293b] p-5 rounded-[2rem] border border-slate-700 shadow-lg">
+                <h3 class="text-[10px] font-bold text-yellow-400 uppercase mb-3"><i class="fas fa-bullhorn mr-1"></i> Update Info Berjalan</h3>
+                <div class="flex gap-2">
+                    <input id="text-info" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none text-white placeholder-gray-500" placeholder="Tulis info gangguan / promo...">
                     <button onclick="updateInfo()" class="bg-yellow-500 hover:bg-yellow-600 px-4 rounded-xl font-bold text-black shadow-lg"><i class="fas fa-save"></i></button>
                 </div>
-                <p class="text-[9px] text-gray-500 mt-2 italic">*Kosongkan dan simpan untuk menghapus info.</p>
             </div>
 
             <div class="bg-[#1e293b] p-5 rounded-[2rem] border border-slate-700 shadow-lg">
                 <h3 class="text-[10px] font-bold text-gray-400 uppercase mb-3"><i class="fas fa-images mr-1"></i> Kelola Banner Slide</h3>
                 <div class="flex gap-2 mb-4">
-                    <input id="url-banner" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none text-white placeholder-gray-500" placeholder="Tempel Link Gambar Banner...">
+                    <input id="url-banner" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none text-white placeholder-gray-500" placeholder="Link Gambar Banner...">
                     <button onclick="tambahBanner()" class="bg-blue-600 hover:bg-blue-500 px-4 rounded-xl font-bold text-white shadow-lg"><i class="fas fa-plus"></i></button>
                 </div>
                 <div id="list-banner-dashboard" class="flex gap-3 overflow-x-auto pb-2 custom-scroll">
-                    <p class="text-[10px] text-gray-500 w-full text-center py-2">Belum ada banner aktif.</p>
+                    <p class="text-[10px] text-gray-500 w-full text-center py-2">Belum ada banner.</p>
                 </div>
             </div>
 
@@ -115,7 +123,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        const PIN_ADMIN = "123456"; // Ganti PIN di sini
+        // --- PIN KEAMANAN BARU ---
+        const PIN_ADMIN = "956924"; 
 
         window.cekLogin = () => {
             if(document.getElementById('input-pin').value === PIN_ADMIN) {
@@ -145,43 +154,40 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- FITUR BARU: UPDATE INFO BERJALAN ---
+        // --- 1. FITUR GANTI LOGO (BARU) ---
+        window.updateLogo = () => {
+            const url = document.getElementById('url-logo').value;
+            set(ref(db, 'pengaturan/logo'), { url: url })
+            .then(() => alert("Logo Berhasil Diganti!"));
+        };
+        onValue(ref(db, 'pengaturan/logo'), (snap) => {
+            const data = snap.val();
+            if(data) document.getElementById('url-logo').value = data.url;
+        });
+
+        // --- 2. FITUR LAIN (INFO, BANNER, GAME, PRODUK) ---
         window.updateInfo = () => {
             const text = document.getElementById('text-info').value;
-            set(ref(db, 'pengaturan/info_berjalan'), { text: text })
-            .then(() => alert("Info Berhasil Diupdate!"));
+            set(ref(db, 'pengaturan/info_berjalan'), { text: text }).then(() => alert("Info Diupdate!"));
         };
-        // Load Info yang sedang aktif ke input
-        onValue(ref(db, 'pengaturan/info_berjalan'), (snap) => {
-            const data = snap.val();
-            if(data) document.getElementById('text-info').value = data.text;
-        });
-        // ----------------------------------------
+        onValue(ref(db, 'pengaturan/info_berjalan'), (snap) => { if(snap.val()) document.getElementById('text-info').value = snap.val().text; });
 
         window.tambahBanner = () => {
             const url = document.getElementById('url-banner').value;
             if(!url) return alert("Link Kosong!");
-            push(ref(db, 'banners'), { url: url }).then(() => { alert("Banner Ditambahkan!"); document.getElementById('url-banner').value=""; });
+            push(ref(db, 'banners'), { url: url }).then(() => { alert("Banner Ditambah!"); document.getElementById('url-banner').value=""; });
         };
         window.hapusBanner = (id) => { if(confirm("Hapus?")) remove(ref(db, 'banners/' + id)); };
-        
         onValue(ref(db, 'banners'), (snap) => {
-            const data = snap.val();
-            const list = document.getElementById('list-banner-dashboard');
-            list.innerHTML = "";
-            if(data) {
-                Object.keys(data).forEach(key => {
-                    list.innerHTML += `<div class="relative min-w-[100px] h-16 rounded-lg overflow-hidden border border-slate-600 group"><img src="${data[key].url}" class="w-full h-full object-cover"><button onclick="hapusBanner('${key}')" class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-red-400"><i class="fas fa-trash"></i></button></div>`;
-                });
-            } else { list.innerHTML = "<p class='text-[10px] text-gray-500 w-full text-center py-4 italic'>Belum ada banner.</p>"; }
+            const data = snap.val(); const list = document.getElementById('list-banner-dashboard'); list.innerHTML="";
+            if(data) { Object.keys(data).forEach(key => { list.innerHTML += `<div class="relative min-w-[100px] h-16 rounded-lg overflow-hidden border border-slate-600 group"><img src="${data[key].url}" class="w-full h-full object-cover"><button onclick="hapusBanner('${key}')" class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-red-400"><i class="fas fa-trash"></i></button></div>`; }); }
+            else { list.innerHTML = "<p class='text-[10px] text-gray-500 w-full text-center py-4'>Belum ada banner.</p>"; }
         });
 
-        // (Kode Kategori, Produk, dll sama seperti sebelumnya - disingkat agar muat)
         window.simpanKategori = () => { const k=document.getElementById('k-kode').value, n=document.getElementById('k-nama').value, i=document.getElementById('k-icon').value; set(ref(db,'kategori_game/'+k),{kode:k,nama:n,icon:i}).then(()=>{document.getElementById('modal-kategori').classList.add('hidden');});};
         window.bukaTambahKategori = () => { document.getElementById('modal-kategori').classList.remove('hidden'); }
         window.prosesSimpan = () => { const k=document.getElementById('f-kategori').value, s=document.getElementById('f-sku').value, n=document.getElementById('f-nama').value, h=document.getElementById('f-harga').value, j=document.getElementById('f-jalur').value; set(ref(db,'produk/'+k+'/'+s),{sku:s,nama:n,harga:parseInt(h),jalur:j}).then(()=>{document.getElementById('modal-tambah-produk').classList.add('hidden');});};
         
-        // Loaders
         onValue(ref(db, 'kategori_game'), (snap) => {
             const data = snap.val(); const sel = document.getElementById('f-kategori'); const list = document.getElementById('list-kategori-admin'); sel.innerHTML=""; list.innerHTML="";
             if(data) Object.values(data).forEach(k => { sel.innerHTML+=`<option value="${k.kode}">${k.nama}</option>`; list.innerHTML+=`<div class="flex justify-between p-2 bg-slate-800 mb-1 rounded text-xs"><span>${k.nama}</span></div>`; });
