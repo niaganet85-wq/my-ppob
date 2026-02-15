@@ -11,7 +11,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Animasi Teks Berjalan Mulus */
+        /* Animasi Teks Berjalan */
         .marquee-container { overflow: hidden; white-space: nowrap; position: relative; }
         .marquee-text { display: inline-block; padding-left: 100%; animation: marquee-animation 15s linear infinite; }
         @keyframes marquee-animation { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
@@ -75,7 +75,7 @@
         import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         // --- URL MACRODROID ANDA ---
-        // ID ini sudah SAMA PERSIS dengan yang ada di HP Anda (c299f377...)
+        // ID ini sudah SAMA PERSIS dengan HP Server Anda
         const MACRODROID_URL = "https://trigger.macrodroid.com/c299f377-88bc-44e9-930b-1be2424a9a9f/order"; 
 
         const firebaseConfig = {
@@ -102,17 +102,31 @@
 
         window.beliOtomatis = (sku, item, harga, game) => {
             const id = document.getElementById('user-id').value;
-            if(!id) return alert("Masukkan ID dulu!");
+            if(!id) return alert("Masukkan ID/Nomor HP dulu!");
+
             document.getElementById('modal-loading').classList.remove('hidden');
 
-            // Simpan ke Firebase
+            // 1. Simpan ke Firebase (History)
             const newRef = push(ref(db, 'transaksi_masuk'));
             set(newRef, { sku: sku, item: item, harga: harga, tujuan: id, game: game, status: 'pending', tanggal: new Date().toLocaleString() })
             .then(() => {
-                // KIRIM SINYAL KE HP SERVER ANDA (MACRODROID)
-                fetch(`${MACRODROID_URL}?sku=${sku}&tujuan=${id}`, { mode: 'no-cors' })
+                
+                // 2. KIRIM SINYAL KE HP SERVER ANDA (MACRODROID)
+                // Ini bagian terpenting agar data 'sku' dan 'tujuan' terkirim
+                const finalUrl = `${MACRODROID_URL}?sku=${sku}&tujuan=${id}`;
+                
+                fetch(finalUrl, { mode: 'no-cors' })
                 .then(() => {
-                    setTimeout(() => { document.getElementById('modal-loading').classList.add('hidden'); alert("Pesanan Diproses Server!"); location.reload(); }, 2000);
+                    setTimeout(() => { 
+                        document.getElementById('modal-loading').classList.add('hidden'); 
+                        alert("Pesanan Diproses Server!"); 
+                        location.reload(); 
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('modal-loading').classList.add('hidden');
+                    alert("Gagal koneksi ke Server HP. Coba lagi.");
                 });
             });
         };
