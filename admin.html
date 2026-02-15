@@ -13,39 +13,39 @@
 
     <div id="login-screen" class="fixed inset-0 bg-gray-900 z-[100] flex items-center justify-center p-6">
         <div class="bg-gray-800 p-8 rounded-[2rem] shadow-2xl border border-gray-700 w-full max-w-sm text-center">
-            <h2 class="text-xl font-bold mb-6 text-blue-400 italic uppercase tracking-tighter">Admin Access</h2>
-            <input type="password" id="pin-input" inputmode="numeric" maxlength="6" class="w-full bg-gray-700 rounded-xl px-4 py-4 text-center text-2xl tracking-[0.5em] mb-6 outline-none border-2 border-transparent focus:border-blue-500 transition" placeholder="******">
-            <button onclick="cekLogin()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-black transition active:scale-95 shadow-lg shadow-blue-900/50">MASUK PANEL</button>
+            <h2 class="text-xl font-bold mb-6 text-blue-400 italic uppercase">Admin Access</h2>
+            <input type="password" id="pin-input" inputmode="numeric" maxlength="6" class="w-full bg-gray-700 rounded-xl px-4 py-4 text-center text-2xl tracking-[0.5em] mb-6 outline-none focus:border-blue-500" placeholder="******">
+            <button onclick="cekLogin()" class="w-full bg-blue-600 py-4 rounded-xl font-black active:scale-95 shadow-lg">MASUK</button>
         </div>
     </div>
 
     <div id="admin-content" class="hidden">
-        <div class="bg-blue-600 p-6 rounded-b-[2.5rem] mb-6 shadow-2xl text-white relative overflow-hidden">
-            <div class="relative z-10 flex justify-between items-start mb-6">
+        <div class="bg-blue-600 p-6 rounded-b-[2.5rem] mb-6 shadow-2xl text-white relative">
+            <div class="flex justify-between items-start mb-6">
                 <div>
                     <h1 class="text-xl font-black italic tracking-tighter uppercase">Niaga Dashboard</h1>
-                    <p class="text-[10px] opacity-80 font-bold">Management System</p>
+                    <p class="text-[10px] opacity-80 font-bold">Pusat Kontrol</p>
                 </div>
-                <button onclick="muatData('cek_saldo')" class="bg-white/20 hover:bg-white/30 p-2 rounded-full transition active:rotate-180 duration-500"><i class="fas fa-sync-alt"></i></button>
+                <button onclick="muatData('cek_saldo')" class="bg-white/20 p-2 rounded-full active:rotate-180 transition duration-500"><i class="fas fa-sync-alt"></i></button>
             </div>
-            
-            <div class="grid grid-cols-2 gap-4 relative z-10">
-                <div class="bg-black/20 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
-                    <p class="text-[9px] font-bold opacity-70 uppercase tracking-widest">Saldo Modal</p>
-                    <h2 id="saldo-text" class="text-lg font-black tracking-tight">Rp 0</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-black/20 p-4 rounded-2xl border border-white/10">
+                    <p class="text-[9px] font-bold opacity-70 uppercase">Saldo Modal</p>
+                    <h2 id="saldo-text" class="text-lg font-black">Rp 0</h2>
                 </div>
-                <div class="bg-black/20 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
-                    <p class="text-[9px] font-bold opacity-70 uppercase tracking-widest">Profit Hari Ini</p>
-                    <h2 id="laba-text" class="text-lg font-black text-yellow-300 tracking-tight">Rp 0</h2>
+                <div class="bg-black/20 p-4 rounded-2xl border border-white/10">
+                    <p class="text-[9px] font-bold opacity-70 uppercase">Profit Hari Ini</p>
+                    <h2 id="laba-text" class="text-lg font-black text-yellow-300">Rp 0</h2>
                 </div>
             </div>
         </div>
 
         <div class="px-4 space-y-4 pb-24">
             <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
-                <button onclick="muatData('riwayat')" class="bg-gray-800 border border-gray-700 px-5 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap active:bg-gray-700">Riwayat</button>
-                <button onclick="tampilPromo()" class="bg-green-600 px-5 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap shadow-lg shadow-green-900/30 active:scale-95"><i class="fas fa-bullhorn mr-1"></i> Promo</button>
-                <button onclick="tampilBanner()" class="bg-purple-600 px-5 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap shadow-lg shadow-purple-900/30 active:scale-95"><i class="fas fa-images mr-1"></i> Banner</button>
+                <button onclick="muatData('riwayat')" class="bg-gray-800 border border-gray-700 px-5 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap">Riwayat</button>
+                <button onclick="bukaCekHarga()" class="bg-yellow-600 px-5 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap shadow-lg shadow-yellow-900/30"><i class="fas fa-tags mr-1"></i> Cek Harga</button>
+                <button onclick="tampilPromo()" class="bg-green-600 px-5 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap shadow-lg shadow-green-900/30"><i class="fas fa-bullhorn mr-1"></i> Promo</button>
+                <button onclick="tampilBanner()" class="bg-purple-600 px-5 py-2 rounded-full text-[10px] font-bold uppercase whitespace-nowrap shadow-lg shadow-purple-900/30"><i class="fas fa-images mr-1"></i> Banner</button>
             </div>
             
             <div id="content-list" class="space-y-3 min-h-[300px]">
@@ -54,26 +54,38 @@
         </div>
     </div>
 
+    <div id="harga-modal" class="fixed inset-0 bg-gray-900 z-[150] hidden flex flex-col p-4">
+        <div class="bg-gray-800 p-4 rounded-t-2xl shadow-xl border-b border-gray-700 flex justify-between items-center">
+            <h3 class="font-bold text-yellow-500 uppercase italic">Cek Harga Pusat</h3>
+            <button onclick="document.getElementById('harga-modal').classList.add('hidden')" class="text-red-400 font-bold">Tutup</button>
+        </div>
+        <div class="bg-gray-800 p-4">
+            <input type="text" id="cari-produk" onkeyup="filterHarga()" class="w-full bg-gray-900 border border-gray-600 rounded-xl p-3 text-xs text-white outline-none focus:border-yellow-500" placeholder="Ketik nama game... (Contoh: Mobile Legends)">
+        </div>
+        <div id="list-harga" class="flex-1 bg-gray-900 overflow-y-auto p-4 space-y-2 pb-20 text-[10px]">
+            <p class="text-center text-gray-500 mt-10">Ketik nama produk untuk mencari...</p>
+        </div>
+    </div>
+
     <div id="banner-modal" class="fixed inset-0 bg-black/90 z-[150] hidden flex flex-col items-center justify-center p-6">
         <div class="bg-gray-800 p-6 w-full max-w-sm rounded-2xl border border-gray-700 shadow-2xl">
-            <h3 class="text-lg font-black text-purple-400 mb-4 uppercase italic">Atur Banner Slide</h3>
-            <p class="text-[9px] text-gray-400 mb-2 italic">Pisahkan link gambar dengan koma (,)</p>
-            <textarea id="input-banner" rows="5" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-[10px] outline-none focus:border-purple-500 text-gray-300"></textarea>
+            <h3 class="text-lg font-black text-purple-400 mb-4 uppercase">Banner Slide</h3>
+            <textarea id="input-banner" rows="5" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-[10px] outline-none text-gray-300"></textarea>
             <div class="grid grid-cols-2 gap-3 mt-4">
-                <button onclick="document.getElementById('banner-modal').classList.add('hidden')" class="bg-gray-700 py-3 rounded-xl font-bold text-xs uppercase">Batal</button>
-                <button onclick="simpanBanner()" class="bg-purple-600 py-3 rounded-xl font-bold text-xs uppercase text-white shadow-lg shadow-purple-900/50">Simpan</button>
+                <button onclick="document.getElementById('banner-modal').classList.add('hidden')" class="bg-gray-700 py-3 rounded-xl font-bold text-xs">Batal</button>
+                <button onclick="simpanBanner()" class="bg-purple-600 py-3 rounded-xl font-bold text-xs text-white">Simpan</button>
             </div>
         </div>
     </div>
 
     <div id="promo-modal" class="fixed inset-0 bg-black/90 z-[150] hidden flex flex-col items-center justify-center p-6">
         <div class="bg-gray-800 p-6 w-full max-w-sm rounded-2xl border border-gray-700 shadow-2xl">
-            <h3 class="text-lg font-black text-green-500 mb-4 uppercase italic">Kirim Promo WA</h3>
-            <textarea id="pesan-promo" rows="4" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs outline-none focus:border-green-500 text-gray-300"></textarea>
+            <h3 class="text-lg font-black text-green-500 mb-4 uppercase">Promo WA</h3>
+            <textarea id="pesan-promo" rows="4" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-xs outline-none text-gray-300"></textarea>
             <div id="list-nomor" class="mt-4 max-h-24 overflow-y-auto text-[9px] text-gray-500 bg-black/20 p-2 rounded-lg font-mono"></div>
             <div class="grid grid-cols-2 gap-3 mt-4">
-                <button onclick="document.getElementById('promo-modal').classList.add('hidden')" class="bg-gray-700 py-3 rounded-xl font-bold text-xs uppercase">Tutup</button>
-                <button onclick="kirimPromo()" class="bg-green-600 py-3 rounded-xl font-bold text-xs uppercase text-white shadow-lg shadow-green-900/50">Kirim</button>
+                <button onclick="document.getElementById('promo-modal').classList.add('hidden')" class="bg-gray-700 py-3 rounded-xl font-bold text-xs">Tutup</button>
+                <button onclick="kirimPromo()" class="bg-green-600 py-3 rounded-xl font-bold text-xs text-white">Kirim</button>
             </div>
         </div>
     </div>
@@ -81,15 +93,15 @@
     <div id="struk-modal" class="fixed inset-0 bg-black/90 z-[200] hidden flex flex-col items-center justify-center p-4">
         <div id="struk-area" class="bg-white p-6 w-full max-w-[280px] rounded-lg font-mono text-[10px] text-gray-800 shadow-2xl">
             <div class="text-center border-b-2 border-dashed border-gray-300 pb-4 mb-4">
-                <h3 class="text-lg font-black italic tracking-tighter text-blue-700 uppercase">NIAGA DIGITAL</h3>
+                <h3 class="text-lg font-black italic text-blue-700 uppercase">NIAGA DIGITAL</h3>
                 <p class="text-[8px] font-bold opacity-60">Bukti Transaksi Sah</p>
             </div>
             <div class="space-y-2 text-[9px]" id="struk-isi"></div>
-            <p class="text-[7px] mt-6 text-center text-gray-400 italic border-t border-gray-100 pt-4">Terima kasih atas kepercayaan Anda.</p>
+            <p class="text-[7px] mt-6 text-center text-gray-400 italic border-t border-gray-100 pt-4">Terima kasih.</p>
         </div>
         <div class="flex space-x-4 mt-8">
-            <button onclick="document.getElementById('struk-modal').classList.add('hidden')" class="bg-gray-700 text-white px-6 py-3 rounded-xl font-bold text-xs uppercase">Tutup</button>
-            <button onclick="unduhStruk()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold text-xs uppercase shadow-lg shadow-green-900/50">Simpan PNG</button>
+            <button onclick="document.getElementById('struk-modal').classList.add('hidden')" class="bg-gray-700 text-white px-6 py-3 rounded-xl font-bold text-xs">Tutup</button>
+            <button onclick="unduhStruk()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold text-xs">Simpan PNG</button>
         </div>
     </div>
 
@@ -97,6 +109,7 @@
         const PIN_RAHASIA = "753357";
         const LABA_FLAT = 250; 
         let dataTransaksi = [];
+        let dataHarga = [];
 
         function cekLogin() {
             if (document.getElementById('pin-input').value === PIN_RAHASIA) {
@@ -120,22 +133,16 @@
                 const result = await res.json();
                 
                 if(tipe === 'cek_saldo') {
-                    // Update Saldo Modal
-                    if(result.data && result.data.deposit) {
-                        document.getElementById('saldo-text').innerText = "Rp " + result.data.deposit.toLocaleString('id-ID');
-                    } else {
-                        document.getElementById('saldo-text').innerText = "Rp 0 (Cek IP)";
-                    }
-                } else {
-                    // Update Riwayat
+                    if(result.data) document.getElementById('saldo-text').innerText = "Rp " + result.data.deposit.toLocaleString('id-ID');
+                } else if(tipe === 'riwayat') {
                     dataTransaksi = result.data || [];
                     hitungLaba(dataTransaksi);
                     renderList(dataTransaksi);
+                } else if(tipe === 'harga') {
+                    dataHarga = result.data || [];
+                    document.getElementById('list-harga').innerHTML = `<p class="text-center text-green-400 mt-10">Data Berhasil Dimuat! Silakan cari produk.</p>`;
                 }
-            } catch (e) {
-                console.error(e);
-                if(tipe !== 'cek_saldo') list.innerHTML = `<p class="text-center text-red-500 text-xs mt-10">Gagal Terhubung API Digiflazz.<br>Pastikan IP Whitelist 0.0.0.0</p>`;
-            }
+            } catch (e) { console.error(e); }
         }
 
         function hitungLaba(data) {
@@ -146,87 +153,89 @@
         function renderList(data) {
             const list = document.getElementById('content-list');
             list.innerHTML = "";
-            if(!data || data.length === 0) { list.innerHTML = `<p class="text-center py-20 italic text-gray-500">Belum ada data transaksi.</p>`; return; }
+            if(!data || data.length === 0) { list.innerHTML = `<p class="text-center py-20 italic text-gray-500">Belum ada data.</p>`; return; }
             
             data.forEach(item => {
                 const isSukses = item.status === 'Sukses';
-                const statusColor = isSukses ? 'text-green-400' : (item.status === 'Gagal' ? 'text-red-400' : 'text-yellow-400');
-                
                 list.innerHTML += `
                 <div class="bg-gray-800 p-5 rounded-3xl border border-gray-700 shadow-md">
                     <div class="flex justify-between items-center mb-1">
-                        <span class="text-[9px] font-bold text-blue-400 uppercase">${item.buyer_sku_code || 'TOPUP'}</span>
-                        <span class="text-[9px] font-black ${statusColor} italic uppercase">${item.status || 'PROSES'}</span>
+                        <span class="text-[9px] font-bold text-blue-400 uppercase">${item.buyer_sku_code}</span>
+                        <span class="text-[9px] font-black ${isSukses ? 'text-green-400' : 'text-red-400'} italic uppercase">${item.status}</span>
                     </div>
-                    <p class="text-xs font-bold text-gray-200 mb-3">${item.customer_no || 'Deposit'}</p>
+                    <p class="text-xs font-bold text-gray-200 mb-3">${item.customer_no}</p>
                     <div class="flex justify-between items-center pt-3 border-t border-gray-700">
-                        <span class="text-[8px] text-gray-500 font-mono">${item.date || ''}</span>
-                        <div class="flex space-x-2">
-                            <span class="text-xs font-bold text-white">Rp ${item.price ? (item.price + LABA_FLAT).toLocaleString() : item.amount.toLocaleString()}</span>
-                            ${isSukses ? `<button onclick="cetakStruk('${item.buyer_sku_code}','${item.customer_no}','${item.price}','${item.date}')" class="bg-blue-600 px-3 py-1 rounded-full text-[8px] font-bold uppercase hover:bg-blue-500">Struk</button>` : ''}
-                        </div>
+                        <span class="text-[8px] text-gray-500 font-mono">${item.date}</span>
+                        ${isSukses ? `<button onclick="cetakStruk('${item.buyer_sku_code}','${item.customer_no}','${item.price}','${item.date}')" class="bg-blue-600 px-3 py-1 rounded-full text-[8px] font-bold uppercase">Struk</button>` : ''}
                     </div>
                 </div>`;
             });
         }
 
-        // --- FITUR TAMBAHAN (Banner, Promo, Struk) ---
+        // --- FITUR BARU: CEK HARGA ---
+        function bukaCekHarga() {
+            document.getElementById('harga-modal').classList.remove('hidden');
+            document.getElementById('list-harga').innerHTML = `<div class="text-center py-10"><i class="fas fa-circle-notch fa-spin text-2xl text-yellow-500"></i><p class="text-gray-500 mt-2">Mengambil 3000+ Produk...</p></div>`;
+            muatData('harga');
+        }
+
+        function filterHarga() {
+            const keyword = document.getElementById('cari-produk').value.toLowerCase();
+            const container = document.getElementById('list-harga');
+            if(keyword.length < 3) return;
+
+            const hasil = dataHarga.filter(item => item.product_name.toLowerCase().includes(keyword) && item.buyer_product_status === true);
+            
+            container.innerHTML = "";
+            if(hasil.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500 mt-4">Produk tidak ditemukan.</p>`;
+                return;
+            }
+
+            hasil.forEach(item => {
+                container.innerHTML += `
+                <div class="bg-gray-900 border border-gray-700 p-3 rounded-xl flex justify-between items-center">
+                    <div>
+                        <p class="text-[9px] text-yellow-500 font-bold uppercase mb-1">SKU: ${item.buyer_sku_code}</p>
+                        <p class="text-xs font-bold text-white">${item.product_name}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-gray-400">Modal</p>
+                        <p class="text-sm font-black text-green-400">Rp ${item.price.toLocaleString()}</p>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // --- Fitur Lain (Banner, Promo, Struk) sama seperti sebelumnya ---
         function tampilBanner() {
             const current = JSON.parse(localStorage.getItem('niaga_banners')) || [];
             document.getElementById('input-banner').value = current.join(', ');
             document.getElementById('banner-modal').classList.remove('hidden');
         }
-
         function simpanBanner() {
             const links = document.getElementById('input-banner').value.split(',').map(l => l.trim()).filter(l => l);
             localStorage.setItem('niaga_banners', JSON.stringify(links));
-            alert("Banner berhasil disimpan!");
-            document.getElementById('banner-modal').classList.add('hidden');
+            alert("Banner Disimpan!"); document.getElementById('banner-modal').classList.add('hidden');
         }
-
         function tampilPromo() {
-            const list = document.getElementById('list-nomor');
-            list.innerHTML = "";
+            const list = document.getElementById('list-nomor'); list.innerHTML = "";
             const unik = [...new Set(dataTransaksi.filter(i => i.status === 'Sukses').map(i => i.customer_no))];
-            
-            if(unik.length === 0) list.innerHTML = "Belum ada nomor pelanggan.";
-            else unik.forEach(n => list.innerHTML += `<div>• ${n}</div>`);
-            
-            document.getElementById('pesan-promo').value = "Halo Kak! 🔥\nLagi ada promo Top Up murah hari ini di NIAGA DIGITAL.\nCek sekarang: " + window.location.origin;
+            unik.forEach(n => list.innerHTML += `<div>• ${n}</div>`);
+            document.getElementById('pesan-promo').value = "Promo Top Up Murah! Cek: " + window.location.origin;
             document.getElementById('promo-modal').classList.remove('hidden');
         }
-
         function kirimPromo() {
             const pesan = document.getElementById('pesan-promo').value;
             const unik = [...new Set(dataTransaksi.filter(i => i.status === 'Sukses').map(i => i.customer_no))];
-            if(unik.length === 0) return alert("Tidak ada tujuan!");
-            
-            unik.forEach((no, i) => {
-                setTimeout(() => {
-                    window.open(`https://wa.me/${no.replace(/^0/, '62')}?text=${encodeURIComponent(pesan)}`, '_blank');
-                }, i * 2000);
-            });
+            unik.forEach((no, i) => setTimeout(() => window.open(`https://wa.me/${no.replace(/^0/, '62')}?text=${encodeURIComponent(pesan)}`, '_blank'), i * 2000));
         }
-
         function cetakStruk(produk, id, harga, tgl) {
-            document.getElementById('struk-isi').innerHTML = `
-                <div class="flex justify-between border-b border-gray-100 pb-1 mb-1"><span>Produk:</span><span class="font-bold uppercase">${produk}</span></div>
-                <div class="flex justify-between border-b border-gray-100 pb-1 mb-1"><span>ID Tujuan:</span><span class="font-bold">${id}</span></div>
-                <div class="flex justify-between border-b border-gray-100 pb-1 mb-1"><span>Status:</span><span class="font-bold text-green-600 uppercase">Sukses</span></div>
-                <div class="flex justify-between mb-4"><span>Waktu:</span><span>${tgl}</span></div>
-                <div class="border-t-2 border-dashed border-gray-300 pt-3 flex justify-between font-bold text-sm text-blue-700">
-                    <span>TOTAL:</span><span>Rp ${(parseInt(harga) + LABA_FLAT).toLocaleString()}</span>
-                </div>`;
+            document.getElementById('struk-isi').innerHTML = `<div class="flex justify-between mb-1"><span>Produk:</span><span class="font-bold uppercase">${produk}</span></div><div class="flex justify-between mb-1"><span>ID:</span><span class="font-bold">${id}</span></div><div class="flex justify-between mb-4 border-b pb-2"><span>Waktu:</span><span>${tgl}</span></div><div class="flex justify-between font-bold text-blue-700"><span>TOTAL:</span><span>Rp ${(parseInt(harga) + LABA_FLAT).toLocaleString()}</span></div>`;
             document.getElementById('struk-modal').classList.remove('hidden');
         }
-
         function unduhStruk() {
-            html2canvas(document.querySelector("#struk-area")).then(canvas => {
-                const a = document.createElement('a');
-                a.download = 'struk-niaga.png';
-                a.href = canvas.toDataURL();
-                a.click();
-            });
+            html2canvas(document.querySelector("#struk-area")).then(c => { const a = document.createElement('a'); a.download = 'struk.png'; a.href = c.toDataURL(); a.click(); });
         }
     </script>
 </body>
