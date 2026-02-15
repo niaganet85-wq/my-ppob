@@ -7,187 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>.glass{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);}</style>
-    
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-        // --- KONFIGURASI FIREBASE (PASTIKAN SAMA DENGAN MILIK ANDA) ---
-        const firebaseConfig = {
-          apiKey: "AIzaSyAIxFEDC9QBYsOyPFFL5tUBz1I8mlH66Hs",
-          authDomain: "games-ku.firebaseapp.com",
-          databaseURL: "https://games-ku-default-rtdb.firebaseio.com",
-          projectId: "games-ku",
-          storageBucket: "games-ku.firebasestorage.app",
-          messagingSenderId: "488423956",
-          appId: "1:488423956:web:79f659dee525fdbc76dd01",
-          measurementId: "G-JYEJK67H4V"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        // --- 1. MANAJEMEN KATEGORI GAME (BARU: BISA EDIT GAMBAR) ---
-        
-        // Simpan Kategori (Bisa Baru / Update Gambar)
-        window.simpanKategori = () => {
-            const kode = document.getElementById('k-kode').value.toLowerCase().replace(/\s/g, '');
-            const nama = document.getElementById('k-nama').value;
-            const icon = document.getElementById('k-icon').value;
-
-            if(!kode || !nama || !icon) return alert("Data Kategori Belum Lengkap!");
-
-            // Simpan ke Firebase (Ini akan menimpa data lama jika kodenya sama = Update)
-            set(ref(db, 'kategori_game/' + kode), {
-                kode: kode, nama: nama, icon: icon
-            }).then(() => {
-                alert("Data Game Berhasil Disimpan!");
-                document.getElementById('modal-kategori').classList.add('hidden');
-                resetFormKategori();
-            });
-        };
-
-        // Buka Form Edit Kategori (Fitur Request Anda)
-        window.bukaEditKategori = (kode, nama, icon) => {
-            document.getElementById('k-nama').value = nama;
-            document.getElementById('k-kode').value = kode;
-            document.getElementById('k-icon').value = icon;
-            
-            // Kunci kode agar tidak bisa diubah (karena ini adalah ID Database)
-            document.getElementById('k-kode').disabled = true;
-            document.getElementById('k-kode').classList.add('opacity-50');
-            
-            document.getElementById('judul-modal-kategori').innerText = "EDIT GAME / GANTI ICON";
-            document.getElementById('modal-kategori').classList.remove('hidden');
-        };
-
-        // Hapus Kategori
-        window.hapusKategori = (kode) => {
-            if(confirm("Hapus Game " + kode + "? Semua produk di dalamnya juga harus dihapus manual.")) {
-                remove(ref(db, 'kategori_game/' + kode));
-            }
-        };
-
-        // Reset Form agar bersih saat mau tambah baru
-        window.bukaTambahKategori = () => {
-            resetFormKategori();
-            document.getElementById('modal-kategori').classList.remove('hidden');
-        }
-
-        function resetFormKategori() {
-            document.getElementById('k-kode').value="";
-            document.getElementById('k-nama').value="";
-            document.getElementById('k-icon').value="";
-            document.getElementById('k-kode').disabled = false;
-            document.getElementById('k-kode').classList.remove('opacity-50');
-            document.getElementById('judul-modal-kategori').innerText = "TAMBAH GAME BARU";
-        }
-
-
-        // --- 2. MANAJEMEN PRODUK (SAMA SEPERTI SEBELUMNYA) ---
-        window.prosesSimpan = () => {
-            const kat = document.getElementById('f-kategori').value;
-            const sku = document.getElementById('f-sku').value;
-            const nama = document.getElementById('f-nama').value;
-            const harga = document.getElementById('f-harga').value;
-            const jalur = document.getElementById('f-jalur').value;
-
-            if(!kat) return alert("Buat KATEGORI GAME dulu!");
-            if(!sku || !nama || !harga) return alert("Lengkapi data produk!");
-
-            set(ref(db, 'produk/' + kat + '/' + sku), {
-                sku: sku, nama: nama, harga: parseInt(harga), jalur: jalur
-            }).then(() => {
-                alert("Produk Tersimpan!");
-                document.getElementById('modal-tambah-produk').classList.add('hidden');
-                resetFormProduk();
-            });
-        };
-
-        window.hapusProduk = (kat, sku) => {
-            if(confirm("Hapus " + sku + "?")) remove(ref(db, 'produk/' + kat + '/' + sku));
-        };
-
-        window.bukaEdit = (kat, sku, nama, harga, jalur) => {
-            document.getElementById('f-kategori').value = kat;
-            document.getElementById('f-sku').value = sku;
-            document.getElementById('f-nama').value = nama;
-            document.getElementById('f-harga').value = harga;
-            document.getElementById('f-jalur').value = jalur;
-            document.getElementById('modal-title-produk').innerText = "EDIT PRODUK";
-            document.getElementById('modal-tambah-produk').classList.remove('hidden');
-        };
-
-        window.updateBanner = () => {
-            const url = document.getElementById('url-banner').value;
-            if(!url) return alert("Link kosong!");
-            set(ref(db, 'pengaturan/banner'), { url: url }).then(() => alert("Banner Updated!"));
-        };
-
-        function resetFormProduk() {
-            document.getElementById('f-sku').value = "";
-            document.getElementById('f-nama').value = "";
-            document.getElementById('f-harga').value = "";
-            document.getElementById('modal-title-produk').innerText = "TAMBAH PRODUK";
-        }
-
-        // --- REALTIME LISTENERS ---
-        
-        // A. LOAD KATEGORI
-        onValue(ref(db, 'kategori_game'), (snap) => {
-            const data = snap.val();
-            const select = document.getElementById('f-kategori');
-            const listKat = document.getElementById('list-kategori-admin');
-            
-            select.innerHTML = "";
-            listKat.innerHTML = "";
-
-            if(data) {
-                Object.values(data).forEach(k => {
-                    select.innerHTML += `<option value="${k.kode}">${k.nama}</option>`;
-                    
-                    listKat.innerHTML += `
-                    <div class="flex items-center justify-between bg-[#0f172a] p-3 rounded-xl border border-slate-600 mb-2">
-                        <div class="flex items-center gap-3">
-                            <img src="${k.icon}" class="w-10 h-10 rounded-lg bg-white object-contain p-1">
-                            <div><p class="text-xs font-bold text-white">${k.nama}</p><p class="text-[9px] text-gray-400">Kode: ${k.kode}</p></div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="bukaEditKategori('${k.kode}', '${k.nama}', '${k.icon}')" class="text-blue-400 bg-blue-500/10 p-2 rounded-lg"><i class="fas fa-pen"></i></button>
-                            <button onclick="hapusKategori('${k.kode}')" class="text-red-400 bg-red-500/10 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>`;
-                });
-            } else {
-                select.innerHTML = "<option value=''>Belum ada kategori</option>";
-                listKat.innerHTML = "<p class='text-center text-xs text-gray-500'>Belum ada game.</p>";
-            }
-        });
-
-        // B. LOAD PRODUK
-        onValue(ref(db, 'produk'), (snap) => {
-            const data = snap.val();
-            const listHtml = document.getElementById('list-produk-admin');
-            listHtml.innerHTML = "";
-            let count = 0;
-            if (data) {
-                Object.keys(data).forEach(kat => {
-                    Object.values(data[kat]).forEach(p => {
-                        count++;
-                        listHtml.innerHTML += `
-                        <div class="bg-[#1e293b] p-3 rounded-xl border border-slate-700 flex justify-between items-center mb-2 shadow-sm">
-                            <div><span class="text-[9px] bg-blue-900 text-blue-300 px-2 rounded uppercase font-bold">${kat}</span><p class="text-white font-bold text-xs mt-1">${p.nama}</p><p class="text-slate-400 text-[10px]">Rp ${p.harga.toLocaleString()}</p></div>
-                            <div class="flex gap-2">
-                                <button onclick="bukaEdit('${kat}','${p.sku}','${p.nama}','${p.harga}','${p.jalur}')" class="text-blue-400 bg-blue-500/10 p-2 rounded-lg"><i class="fas fa-pen"></i></button>
-                                <button onclick="hapusProduk('${kat}','${p.sku}')" class="text-red-400 bg-red-500/10 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>`;
-                    });
-                });
-                document.getElementById('total-produk').innerText = count + " Item";
-            }
-        });
-    </script>
 </head>
 <body class="bg-[#0f172a] text-white font-sans min-h-screen pb-24">
 
@@ -241,10 +60,10 @@
                     <input id="k-kode" class="w-full bg-[#1e293b] p-3 rounded-lg text-xs border border-slate-600 outline-none" placeholder="Kode (Cth: valo)">
                     <input id="k-icon" class="w-full bg-[#1e293b] p-3 rounded-lg text-xs border border-slate-600 outline-none" placeholder="Link Icon URL">
                 </div>
-                <button onclick="simpanKategori()" class="w-full bg-purple-600 py-3 rounded-lg font-bold text-xs">SIMPAN GAME</button>
+                <button onclick="simpanKategori()" class="w-full bg-purple-600 hover:bg-purple-500 py-3 rounded-lg font-bold text-xs transition">SIMPAN GAME</button>
             </div>
 
-            <p class="text-[10px] text-gray-400 uppercase font-bold mb-2">Game Terdaftar (Klik Pensil untuk Edit):</p>
+            <p class="text-[10px] text-gray-400 uppercase font-bold mb-2">Game Terdaftar:</p>
             <div id="list-kategori-admin" class="max-h-40 overflow-y-auto pr-1 custom-scroll"></div>
         </div>
     </div>
@@ -255,16 +74,194 @@
             <h3 id="modal-title-produk" class="font-black text-center text-xl italic mb-6 text-white">TAMBAH PRODUK</h3>
             
             <div class="space-y-4">
-                <div><label class="text-[9px] text-gray-400 font-bold ml-1">Pilih Game</label><select id="f-kategori" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none"></select></div>
+                <div>
+                    <label class="text-[9px] text-gray-400 font-bold ml-1">Pilih Game (WAJIB)</label>
+                    <select id="f-kategori" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none">
+                        <option value="">-- Buat Kategori Dulu --</option>
+                    </select>
+                </div>
                 <div class="grid grid-cols-2 gap-3">
                     <input id="f-sku" class="bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none" placeholder="SKU (Cth: ML5)">
                     <input id="f-harga" type="number" class="bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none" placeholder="Harga (Rp)">
                 </div>
                 <input id="f-nama" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none" placeholder="Nama Produk">
                 <select id="f-jalur" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none"><option value="digi">Digiflazz</option><option value="api">API Games</option></select>
-                <button onclick="prosesSimpan()" class="w-full bg-green-500 py-4 rounded-xl font-bold text-sm shadow-lg mt-2">SIMPAN</button>
+                
+                <button onclick="prosesSimpan()" class="w-full bg-green-500 hover:bg-green-600 py-4 rounded-xl font-bold text-sm shadow-lg mt-2 transition">SIMPAN PRODUK</button>
             </div>
         </div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // CONFIG FIREBASE ANDA
+        const firebaseConfig = {
+          apiKey: "AIzaSyAIxFEDC9QBYsOyPFFL5tUBz1I8mlH66Hs",
+          authDomain: "games-ku.firebaseapp.com",
+          databaseURL: "https://games-ku-default-rtdb.firebaseio.com",
+          projectId: "games-ku",
+          storageBucket: "games-ku.firebasestorage.app",
+          messagingSenderId: "488423956",
+          appId: "1:488423956:web:79f659dee525fdbc76dd01",
+          measurementId: "G-JYEJK67H4V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // --- 1. MANAJEMEN KATEGORI ---
+        window.simpanKategori = () => {
+            const kode = document.getElementById('k-kode').value.toLowerCase().replace(/\s/g, '');
+            const nama = document.getElementById('k-nama').value;
+            const icon = document.getElementById('k-icon').value;
+
+            if(!kode || !nama || !icon) return alert("Harap isi Kode, Nama, dan Link Icon!");
+
+            // Tambahkan .catch untuk menangkap error database
+            set(ref(db, 'kategori_game/' + kode), {
+                kode: kode, nama: nama, icon: icon
+            }).then(() => {
+                alert("Berhasil Menyimpan Game!");
+                document.getElementById('modal-kategori').classList.add('hidden');
+                resetFormKategori();
+            }).catch((error) => {
+                alert("GAGAL SIMPAN: " + error.message);
+                console.error(error);
+            });
+        };
+
+        window.bukaEditKategori = (kode, nama, icon) => {
+            document.getElementById('k-nama').value = nama;
+            document.getElementById('k-kode').value = kode;
+            document.getElementById('k-icon').value = icon;
+            document.getElementById('k-kode').disabled = true;
+            document.getElementById('judul-modal-kategori').innerText = "EDIT GAME";
+            document.getElementById('modal-kategori').classList.remove('hidden');
+        };
+
+        window.hapusKategori = (kode) => {
+            if(confirm("Hapus Game " + kode + "?")) {
+                remove(ref(db, 'kategori_game/' + kode)).catch(e => alert(e.message));
+            }
+        };
+
+        window.bukaTambahKategori = () => {
+            resetFormKategori();
+            document.getElementById('modal-kategori').classList.remove('hidden');
+        }
+
+        function resetFormKategori() {
+            document.getElementById('k-kode').value="";
+            document.getElementById('k-nama').value="";
+            document.getElementById('k-icon').value="";
+            document.getElementById('k-kode').disabled = false;
+            document.getElementById('judul-modal-kategori').innerText = "TAMBAH GAME BARU";
+        }
+
+        // --- 2. MANAJEMEN PRODUK ---
+        window.prosesSimpan = () => {
+            const kat = document.getElementById('f-kategori').value;
+            const sku = document.getElementById('f-sku').value;
+            const nama = document.getElementById('f-nama').value;
+            const harga = document.getElementById('f-harga').value;
+            const jalur = document.getElementById('f-jalur').value;
+
+            // VALIDASI PENTING
+            if(!kat) return alert("STOP! Anda belum memilih Kategori Game. Buat Kategori dulu (Tombol Ungu)!");
+            if(!sku || !nama || !harga) return alert("Lengkapi data produk (SKU, Nama, Harga)!");
+
+            set(ref(db, 'produk/' + kat + '/' + sku), {
+                sku: sku, nama: nama, harga: parseInt(harga), jalur: jalur
+            }).then(() => {
+                alert("Produk Berhasil Disimpan!");
+                document.getElementById('modal-tambah-produk').classList.add('hidden');
+                resetFormProduk();
+            }).catch((error) => {
+                alert("GAGAL SIMPAN PRODUK: " + error.message);
+            });
+        };
+
+        window.hapusProduk = (kat, sku) => {
+            if(confirm("Hapus " + sku + "?")) remove(ref(db, 'produk/' + kat + '/' + sku));
+        };
+
+        window.bukaEdit = (kat, sku, nama, harga, jalur) => {
+            document.getElementById('f-kategori').value = kat;
+            document.getElementById('f-sku').value = sku;
+            document.getElementById('f-nama').value = nama;
+            document.getElementById('f-harga').value = harga;
+            document.getElementById('f-jalur').value = jalur;
+            document.getElementById('modal-title-produk').innerText = "EDIT PRODUK";
+            document.getElementById('modal-tambah-produk').classList.remove('hidden');
+        };
+
+        window.updateBanner = () => {
+            const url = document.getElementById('url-banner').value;
+            if(!url) return alert("Link kosong!");
+            set(ref(db, 'pengaturan/banner'), { url: url }).then(() => alert("Banner Updated!")).catch(e => alert(e.message));
+        };
+
+        function resetFormProduk() {
+            document.getElementById('f-sku').value = "";
+            document.getElementById('f-nama').value = "";
+            document.getElementById('f-harga').value = "";
+            document.getElementById('modal-title-produk').innerText = "TAMBAH PRODUK";
+        }
+
+        // --- REALTIME LISTENERS ---
+        onValue(ref(db, 'kategori_game'), (snap) => {
+            const data = snap.val();
+            const select = document.getElementById('f-kategori');
+            const listKat = document.getElementById('list-kategori-admin');
+            
+            select.innerHTML = "";
+            listKat.innerHTML = "";
+
+            if(data) {
+                Object.values(data).forEach(k => {
+                    select.innerHTML += `<option value="${k.kode}">${k.nama}</option>`;
+                    listKat.innerHTML += `
+                    <div class="flex items-center justify-between bg-[#0f172a] p-3 rounded-xl border border-slate-600 mb-2">
+                        <div class="flex items-center gap-3">
+                            <img src="${k.icon}" class="w-10 h-10 rounded-lg bg-white object-contain p-1">
+                            <div><p class="text-xs font-bold text-white">${k.nama}</p><p class="text-[9px] text-gray-400">Kode: ${k.kode}</p></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="bukaEditKategori('${k.kode}', '${k.nama}', '${k.icon}')" class="text-blue-400 bg-blue-500/10 p-2 rounded-lg"><i class="fas fa-pen"></i></button>
+                            <button onclick="hapusKategori('${k.kode}')" class="text-red-400 bg-red-500/10 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+            } else {
+                select.innerHTML = "<option value=''>-- Database Kosong --</option>";
+                listKat.innerHTML = "<p class='text-center text-xs text-gray-500'>Belum ada game.</p>";
+            }
+        });
+
+        onValue(ref(db, 'produk'), (snap) => {
+            const data = snap.val();
+            const listHtml = document.getElementById('list-produk-admin');
+            listHtml.innerHTML = "";
+            let count = 0;
+            if (data) {
+                Object.keys(data).forEach(kat => {
+                    Object.values(data[kat]).forEach(p => {
+                        count++;
+                        listHtml.innerHTML += `
+                        <div class="bg-[#1e293b] p-3 rounded-xl border border-slate-700 flex justify-between items-center mb-2 shadow-sm">
+                            <div><span class="text-[9px] bg-blue-900 text-blue-300 px-2 rounded uppercase font-bold">${kat}</span><p class="text-white font-bold text-xs mt-1">${p.nama}</p><p class="text-slate-400 text-[10px]">Rp ${p.harga.toLocaleString()}</p></div>
+                            <div class="flex gap-2">
+                                <button onclick="bukaEdit('${kat}','${p.sku}','${p.nama}','${p.harga}','${p.jalur}')" class="text-blue-400 bg-blue-500/10 p-2 rounded-lg"><i class="fas fa-pen"></i></button>
+                                <button onclick="hapusProduk('${kat}','${p.sku}')" class="text-red-400 bg-red-500/10 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                    });
+                });
+                document.getElementById('total-produk').innerText = count + " Item";
+            }
+        });
+    </script>
 </body>
 </html>
