@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .active-scale:active{transform:scale(0.95); transition:0.1s;}
-        /* Sembunyikan Scrollbar tapi tetap bisa digeser */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -18,25 +17,29 @@
     <nav class="bg-blue-600 p-5 rounded-b-[2rem] shadow-xl sticky top-0 z-50 flex justify-between items-center text-white">
         <div class="flex items-center gap-2">
             <div class="bg-white/20 p-2 rounded-lg"><i class="fas fa-gamepad text-xl"></i></div>
-            <div>
-                <h1 class="font-black italic tracking-tighter text-lg leading-none">GAME KU</h1>
-                <p class="text-[9px] opacity-80 uppercase tracking-widest">Top Up Terpercaya</p>
-            </div>
+            <div><h1 class="font-black italic tracking-tighter text-lg leading-none">GAME KU</h1><p class="text-[9px] opacity-80 uppercase tracking-widest">Top Up Terpercaya</p></div>
         </div>
-        <div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1">
-            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div> ONLINE
-        </div>
+        <div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1"><div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div> ONLINE</div>
     </nav>
 
     <div id="home-page" class="p-5">
         
-        <div class="relative w-full h-48 rounded-[2rem] mb-8 overflow-hidden shadow-lg group">
+        <div class="relative w-full h-32 rounded-2xl mb-4 overflow-hidden shadow-lg group">
             <div id="slider-banner" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
-                <div class="w-full h-full flex-shrink-0 bg-gray-300 flex items-center justify-center snap-center">
-                    <p class="text-xs text-gray-500 animate-pulse">Memuat Promo...</p>
-                </div>
+                <div class="w-full h-full flex-shrink-0 bg-gray-300 flex items-center justify-center snap-center"><p class="text-xs text-gray-500 animate-pulse">Memuat Promo...</p></div>
             </div>
-            <div id="indikator-banner" class="absolute bottom-3 left-0 w-full flex justify-center gap-1 z-10"></div>
+            <div id="indikator-banner" class="absolute bottom-2 left-0 w-full flex justify-center gap-1 z-10"></div>
+        </div>
+
+        <div id="container-info" class="hidden mb-6 bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center gap-3 shadow-sm">
+            <div class="bg-yellow-400 text-yellow-900 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 animate-pulse">
+                <i class="fas fa-bullhorn text-xs"></i>
+            </div>
+            <div class="w-full overflow-hidden whitespace-nowrap">
+                <marquee id="text-info-display" class="text-xs font-bold text-yellow-800" scrollamount="5">
+                    Memuat Info...
+                </marquee>
+            </div>
         </div>
 
         <div class="flex items-center justify-between mb-4 px-1">
@@ -44,34 +47,19 @@
             <span class="text-[10px] text-blue-500 font-bold bg-blue-100 px-2 py-1 rounded-full">Lengkap</span>
         </div>
         
-        <div id="grid-game" class="grid grid-cols-3 gap-4">
-            <div class="col-span-3 text-center py-10">
-                <i class="fas fa-circle-notch fa-spin text-blue-500 mb-2"></i>
-                <p class="text-xs text-gray-400">Sedang memuat game...</p>
-            </div>
-        </div>
+        <div id="grid-game" class="grid grid-cols-3 gap-3"></div>
     </div>
 
     <div id="order-page" class="hidden p-5">
-        <button onclick="location.reload()" class="bg-white border border-gray-200 px-4 py-3 rounded-2xl text-xs font-bold mb-6 shadow-sm flex items-center gap-2 hover:bg-gray-50 transition">
-            <i class="fas fa-arrow-left text-blue-600"></i> Kembali ke Beranda
-        </button>
-
-        <div class="bg-white p-6 rounded-[2.5rem] shadow-lg border border-gray-100 mb-6 relative overflow-hidden">
+        <button onclick="location.reload()" class="bg-white border border-gray-200 px-4 py-3 rounded-2xl text-xs font-bold mb-6 shadow-sm flex items-center gap-2 hover:bg-gray-50 transition"><i class="fas fa-arrow-left text-blue-600"></i> Kembali</button>
+        <div class="bg-white p-6 rounded-[2rem] shadow-lg border border-gray-100 mb-6 relative overflow-hidden">
             <div class="absolute top-0 right-0 bg-blue-600 w-20 h-20 rounded-bl-[100%] -mr-10 -mt-10 opacity-10"></div>
-            
             <h2 id="game-title" class="text-xl font-black text-blue-600 italic mb-1 uppercase">GAME NAME</h2>
-            <p class="text-[10px] text-gray-400 mb-4">Pastikan User ID Anda benar sebelum membeli.</p>
-            
-            <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex items-center gap-3 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-100 transition">
-                <i class="fas fa-id-card text-gray-400 text-lg"></i>
-                <input id="user-id" type="tel" class="bg-transparent w-full outline-none font-bold text-gray-700 placeholder-gray-300 text-sm" placeholder="Masukkan ID (Contoh: 12345678)">
-            </div>
+            <p class="text-[10px] text-gray-400 mb-4">Pastikan User ID Anda benar.</p>
+            <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex items-center gap-3"><i class="fas fa-id-card text-gray-400 text-lg"></i><input id="user-id" type="tel" class="bg-transparent w-full outline-none font-bold text-gray-700 placeholder-gray-300 text-sm" placeholder="Masukkan ID / No.HP"></div>
         </div>
-
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">Pilih Nominal Top Up</h3>
-        <div id="list-produk" class="space-y-3">
-            </div>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">Pilih Item</h3>
+        <div id="list-produk" class="space-y-3"></div>
     </div>
 
     <script type="module">
@@ -88,114 +76,44 @@
           appId: "1:488423956:web:79f659dee525fdbc76dd01",
           measurementId: "G-JYEJK67H4V"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- 1. SLIDE BANNER LOGIC ---
+        // --- FITUR BARU: TEKS BERJALAN ---
+        onValue(ref(db, 'pengaturan/info_berjalan'), (snap) => {
+            const data = snap.val();
+            const container = document.getElementById('container-info');
+            const textElement = document.getElementById('text-info-display');
+
+            if(data && data.text && data.text.trim() !== "") {
+                // Jika ada teks, tampilkan
+                container.classList.remove('hidden');
+                textElement.innerText = data.text;
+            } else {
+                // Jika kosong, sembunyikan kotaknya
+                container.classList.add('hidden');
+            }
+        });
+
+        // Banner Slider
         onValue(ref(db, 'banners'), (snap) => {
-            const data = snap.val();
-            const slider = document.getElementById('slider-banner');
-            const indikator = document.getElementById('indikator-banner');
-            
-            slider.innerHTML = "";
-            indikator.innerHTML = "";
-            
-            if(data) {
-                Object.values(data).forEach(banner => {
-                    slider.innerHTML += `<img src="${banner.url}" class="w-full h-full object-cover flex-shrink-0 snap-center bg-gray-200">`;
-                    indikator.innerHTML += `<div class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm shadow-sm"></div>`;
-                });
-                
-                // Auto Scroll effect
-                let scrollPos = 0;
-                setInterval(() => {
-                    scrollPos += slider.offsetWidth;
-                    if(scrollPos >= slider.scrollWidth) scrollPos = 0;
-                    slider.scrollTo({left: scrollPos, behavior: 'smooth'});
-                }, 4000);
-            } else {
-                slider.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400 text-xs font-bold">Belum ada promo</div>`;
-            }
+            const data = snap.val(); const s=document.getElementById('slider-banner'); const i=document.getElementById('indikator-banner'); s.innerHTML=""; i.innerHTML="";
+            if(data) { Object.values(data).forEach(b=>{ s.innerHTML+=`<img src="${b.url}" class="w-full h-full object-cover flex-shrink-0 snap-center bg-gray-100">`; i.innerHTML+=`<div class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm shadow-sm"></div>`; });
+            let pos=0; setInterval(()=>{ pos+=s.offsetWidth; if(pos>=s.scrollWidth)pos=0; s.scrollTo({left:pos,behavior:'smooth'}); },4000); }
         });
 
-        // --- 2. GAME GRID LOGIC ---
+        // Game Grid
         onValue(ref(db, 'kategori_game'), (snap) => {
-            const data = snap.val();
-            const grid = document.getElementById('grid-game');
-            grid.innerHTML = "";
-
-            if(data) {
-                Object.values(data).forEach(game => {
-                    grid.innerHTML += `
-                    <div onclick="bukaGame('${game.kode}', '${game.nama}')" class="active-scale bg-white p-3 rounded-[1.8rem] shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32 cursor-pointer hover:border-blue-400 hover:shadow-md transition group">
-                        <div class="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center group-hover:bg-blue-50 transition">
-                            <img src="${game.icon}" class="w-10 h-10 object-contain drop-shadow-sm">
-                        </div>
-                        <span class="text-[10px] font-bold text-center leading-tight text-gray-700 group-hover:text-blue-600">${game.nama}</span>
-                    </div>`;
-                });
-            } else {
-                grid.innerHTML = "<p class='col-span-3 text-center text-xs text-gray-400 py-10'>Belum ada game tersedia.</p>";
-            }
+            const data = snap.val(); const g=document.getElementById('grid-game'); g.innerHTML="";
+            if(data) Object.values(data).forEach(ga=>{ g.innerHTML+=`<div onclick="bukaGame('${ga.kode}','${ga.nama}')" class="active-scale bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-28 cursor-pointer"><img src="${ga.icon}" class="w-8 h-8 object-contain"><span class="text-[10px] font-bold text-center leading-tight text-gray-700 line-clamp-2">${ga.nama}</span></div>`; });
         });
 
-        // --- 3. PRODUCT LOGIC ---
-        window.bukaGame = (kode, nama) => {
-            document.getElementById('home-page').classList.add('hidden');
-            document.getElementById('order-page').classList.remove('hidden');
-            document.getElementById('game-title').innerText = nama;
-            window.scrollTo(0,0);
-            
-            const list = document.getElementById('list-produk');
-            list.innerHTML = "<div class='text-center py-20'><i class='fas fa-circle-notch fa-spin text-blue-500 text-2xl'></i></div>";
-
-            onValue(ref(db, 'produk/' + kode), (snap) => {
-                const data = snap.val();
-                list.innerHTML = "";
-                if(!data) return list.innerHTML = `
-                    <div class="text-center py-10 opacity-50">
-                        <i class="fas fa-box-open text-4xl mb-2 text-gray-300"></i>
-                        <p class="text-xs text-gray-400">Produk belum tersedia.</p>
-                    </div>`;
-                
-                Object.values(data).sort((a,b)=>a.harga-b.harga).forEach(p => {
-                    list.innerHTML += `
-                    <div onclick="kirimPesanan('${p.nama}', ${p.harga}, '${nama}')" class="active-scale bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm cursor-pointer hover:border-blue-500 hover:bg-blue-50/10 transition group">
-                        <div class="flex items-center gap-3">
-                            <div class="bg-blue-100 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs group-hover:bg-blue-600 group-hover:text-white transition">
-                                <i class="fas fa-gem"></i>
-                            </div>
-                            <div>
-                                <p class="font-bold text-gray-800 text-sm group-hover:text-blue-600 transition">${p.nama}</p>
-                                <p class="text-[10px] text-gray-400 italic">Proses Otomatis</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-blue-600 font-black text-sm">Rp ${p.harga.toLocaleString()}</p>
-                            <span class="text-[9px] text-gray-300 bg-gray-100 px-2 py-0.5 rounded-full">Beli</span>
-                        </div>
-                    </div>`;
-                });
-            });
+        // Produk
+        window.bukaGame = (k,n) => { document.getElementById('home-page').classList.add('hidden'); document.getElementById('order-page').classList.remove('hidden'); document.getElementById('game-title').innerText=n; window.scrollTo(0,0);
+            const l=document.getElementById('list-produk'); l.innerHTML="<div class='text-center py-20'><i class='fas fa-circle-notch fa-spin text-blue-500'></i></div>";
+            onValue(ref(db,'produk/'+k),(s)=>{ const d=s.val(); l.innerHTML=""; if(!d)return l.innerHTML="<p class='text-center text-xs text-gray-400'>Kosong</p>"; Object.values(d).sort((a,b)=>a.harga-b.harga).forEach(p=>{ l.innerHTML+=`<div onclick="kirimPesanan('${p.nama}',${p.harga},'${n}')" class="active-scale bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm cursor-pointer"><div class="flex items-center gap-3"><div class="bg-blue-50 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs"><i class="fas fa-gem"></i></div><div><p class="font-bold text-gray-800 text-sm">${p.nama}</p></div></div><div class="text-right"><p class="text-blue-600 font-black text-sm">Rp ${p.harga.toLocaleString()}</p></div></div>`; }); });
         };
-
-        // --- 4. WHATSAPP LOGIC ---
-        window.kirimPesanan = (item, harga, game) => {
-            const id = document.getElementById('user-id').value;
-            if(!id) {
-                // Efek getar/merah jika lupa isi ID
-                const input = document.getElementById('user-id').parentElement;
-                input.classList.add('ring-2', 'ring-red-500', 'bg-red-50');
-                setTimeout(() => input.classList.remove('ring-2', 'ring-red-500', 'bg-red-50'), 500);
-                return alert("Mohon masukkan User ID / Nomor HP Anda!");
-            }
-            
-            const nomorAdmin = "6285371178655"; // Pastikan nomor ini benar
-            const pesan = `Halo Admin, Saya mau order:\n\n🎮 *${game}*\n💎 Item: ${item}\n🆔 ID: ${id}\n💰 Harga: Rp ${harga.toLocaleString()}\n\nMohon diproses ya min!`;
-            
-            window.open(`https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`, '_blank');
-        };
+        window.kirimPesanan = (i,h,g) => { const id=document.getElementById('user-id').value; if(!id)return alert("Isi ID!"); const p=`Halo Admin, beli:\n${g} - ${i}\nID: ${id}\nRp ${h.toLocaleString()}`; window.open(`https://wa.me/6285371178655?text=${encodeURIComponent(p)}`,'_blank'); };
     </script>
 </body>
 </html>
