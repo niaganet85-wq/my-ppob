@@ -3,19 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD SUPER ADMIN</title>
+    <title>SUPER ADMIN DASHBOARD</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .neumorph { box-shadow: 5px 5px 10px #0b1120, -5px -5px 10px #131d34; }
-    </style>
+    <style>.glass{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);}</style>
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // KONFIGURASI FIREBASE ANDA
+        // --- KONFIGURASI FIREBASE (PASTIKAN SAMA DENGAN MILIK ANDA) ---
         const firebaseConfig = {
           apiKey: "AIzaSyAIxFEDC9QBYsOyPFFL5tUBz1I8mlH66Hs",
           authDomain: "games-ku.firebaseapp.com",
@@ -30,188 +27,244 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- FUNGSI UTAMA ---
+        // --- 1. MANAJEMEN KATEGORI GAME (BARU: BISA EDIT GAMBAR) ---
         
-        // 1. SIMPAN/EDIT PRODUK
-        window.prosesSimpan = function() {
+        // Simpan Kategori (Bisa Baru / Update Gambar)
+        window.simpanKategori = () => {
+            const kode = document.getElementById('k-kode').value.toLowerCase().replace(/\s/g, '');
+            const nama = document.getElementById('k-nama').value;
+            const icon = document.getElementById('k-icon').value;
+
+            if(!kode || !nama || !icon) return alert("Data Kategori Belum Lengkap!");
+
+            // Simpan ke Firebase (Ini akan menimpa data lama jika kodenya sama = Update)
+            set(ref(db, 'kategori_game/' + kode), {
+                kode: kode, nama: nama, icon: icon
+            }).then(() => {
+                alert("Data Game Berhasil Disimpan!");
+                document.getElementById('modal-kategori').classList.add('hidden');
+                resetFormKategori();
+            });
+        };
+
+        // Buka Form Edit Kategori (Fitur Request Anda)
+        window.bukaEditKategori = (kode, nama, icon) => {
+            document.getElementById('k-nama').value = nama;
+            document.getElementById('k-kode').value = kode;
+            document.getElementById('k-icon').value = icon;
+            
+            // Kunci kode agar tidak bisa diubah (karena ini adalah ID Database)
+            document.getElementById('k-kode').disabled = true;
+            document.getElementById('k-kode').classList.add('opacity-50');
+            
+            document.getElementById('judul-modal-kategori').innerText = "EDIT GAME / GANTI ICON";
+            document.getElementById('modal-kategori').classList.remove('hidden');
+        };
+
+        // Hapus Kategori
+        window.hapusKategori = (kode) => {
+            if(confirm("Hapus Game " + kode + "? Semua produk di dalamnya juga harus dihapus manual.")) {
+                remove(ref(db, 'kategori_game/' + kode));
+            }
+        };
+
+        // Reset Form agar bersih saat mau tambah baru
+        window.bukaTambahKategori = () => {
+            resetFormKategori();
+            document.getElementById('modal-kategori').classList.remove('hidden');
+        }
+
+        function resetFormKategori() {
+            document.getElementById('k-kode').value="";
+            document.getElementById('k-nama').value="";
+            document.getElementById('k-icon').value="";
+            document.getElementById('k-kode').disabled = false;
+            document.getElementById('k-kode').classList.remove('opacity-50');
+            document.getElementById('judul-modal-kategori').innerText = "TAMBAH GAME BARU";
+        }
+
+
+        // --- 2. MANAJEMEN PRODUK (SAMA SEPERTI SEBELUMNYA) ---
+        window.prosesSimpan = () => {
             const kat = document.getElementById('f-kategori').value;
             const sku = document.getElementById('f-sku').value;
             const nama = document.getElementById('f-nama').value;
             const harga = document.getElementById('f-harga').value;
             const jalur = document.getElementById('f-jalur').value;
 
+            if(!kat) return alert("Buat KATEGORI GAME dulu!");
             if(!sku || !nama || !harga) return alert("Lengkapi data produk!");
 
             set(ref(db, 'produk/' + kat + '/' + sku), {
                 sku: sku, nama: nama, harga: parseInt(harga), jalur: jalur
             }).then(() => {
-                alert("Data Tersimpan!");
+                alert("Produk Tersimpan!");
                 document.getElementById('modal-tambah-produk').classList.add('hidden');
-                resetForm();
+                resetFormProduk();
             });
         };
 
-        // 2. HAPUS PRODUK
-        window.hapusProduk = function(kat, sku) {
-            if(confirm("Hapus " + sku + "?")) {
-                remove(ref(db, 'produk/' + kat + '/' + sku));
-            }
+        window.hapusProduk = (kat, sku) => {
+            if(confirm("Hapus " + sku + "?")) remove(ref(db, 'produk/' + kat + '/' + sku));
         };
 
-        // 3. EDIT PRODUK (POPUP)
-        window.bukaEdit = function(kat, sku, nama, harga, jalur) {
+        window.bukaEdit = (kat, sku, nama, harga, jalur) => {
             document.getElementById('f-kategori').value = kat;
             document.getElementById('f-sku').value = sku;
             document.getElementById('f-nama').value = nama;
             document.getElementById('f-harga').value = harga;
             document.getElementById('f-jalur').value = jalur;
-            document.querySelector('#modal-tambah-produk h3').innerText = "EDIT PRODUK";
+            document.getElementById('modal-title-produk').innerText = "EDIT PRODUK";
             document.getElementById('modal-tambah-produk').classList.remove('hidden');
         };
 
-        // 4. UPDATE BANNER
-        window.updateBanner = function() {
+        window.updateBanner = () => {
             const url = document.getElementById('url-banner').value;
-            if(!url) return alert("Link URL kosong!");
-            set(ref(db, 'pengaturan/banner'), { url: url }).then(() => alert("Banner Depan Berhasil Diganti!"));
+            if(!url) return alert("Link kosong!");
+            set(ref(db, 'pengaturan/banner'), { url: url }).then(() => alert("Banner Updated!"));
         };
 
-        function resetForm() {
+        function resetFormProduk() {
             document.getElementById('f-sku').value = "";
             document.getElementById('f-nama').value = "";
             document.getElementById('f-harga').value = "";
-            document.querySelector('#modal-tambah-produk h3').innerText = "TAMBAH PRODUK";
+            document.getElementById('modal-title-produk').innerText = "TAMBAH PRODUK";
         }
 
-        // --- REALTIME LISTENER ---
-        onValue(ref(db, 'produk'), (snapshot) => {
-            const data = snapshot.val();
+        // --- REALTIME LISTENERS ---
+        
+        // A. LOAD KATEGORI
+        onValue(ref(db, 'kategori_game'), (snap) => {
+            const data = snap.val();
+            const select = document.getElementById('f-kategori');
+            const listKat = document.getElementById('list-kategori-admin');
+            
+            select.innerHTML = "";
+            listKat.innerHTML = "";
+
+            if(data) {
+                Object.values(data).forEach(k => {
+                    select.innerHTML += `<option value="${k.kode}">${k.nama}</option>`;
+                    
+                    listKat.innerHTML += `
+                    <div class="flex items-center justify-between bg-[#0f172a] p-3 rounded-xl border border-slate-600 mb-2">
+                        <div class="flex items-center gap-3">
+                            <img src="${k.icon}" class="w-10 h-10 rounded-lg bg-white object-contain p-1">
+                            <div><p class="text-xs font-bold text-white">${k.nama}</p><p class="text-[9px] text-gray-400">Kode: ${k.kode}</p></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="bukaEditKategori('${k.kode}', '${k.nama}', '${k.icon}')" class="text-blue-400 bg-blue-500/10 p-2 rounded-lg"><i class="fas fa-pen"></i></button>
+                            <button onclick="hapusKategori('${k.kode}')" class="text-red-400 bg-red-500/10 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+                });
+            } else {
+                select.innerHTML = "<option value=''>Belum ada kategori</option>";
+                listKat.innerHTML = "<p class='text-center text-xs text-gray-500'>Belum ada game.</p>";
+            }
+        });
+
+        // B. LOAD PRODUK
+        onValue(ref(db, 'produk'), (snap) => {
+            const data = snap.val();
             const listHtml = document.getElementById('list-produk-admin');
             listHtml.innerHTML = "";
-            let totalProduk = 0;
-            
+            let count = 0;
             if (data) {
-                Object.keys(data).forEach(kategori => {
-                    Object.values(data[kategori]).forEach(p => {
-                        totalProduk++;
+                Object.keys(data).forEach(kat => {
+                    Object.values(data[kat]).forEach(p => {
+                        count++;
                         listHtml.innerHTML += `
                         <div class="bg-[#1e293b] p-3 rounded-xl border border-slate-700 flex justify-between items-center mb-2 shadow-sm">
-                            <div>
-                                <span class="text-[9px] bg-blue-900 text-blue-300 px-2 py-0.5 rounded uppercase font-bold">${kategori}</span>
-                                <p class="text-white font-bold text-xs mt-1">${p.nama}</p>
-                                <p class="text-slate-400 text-[10px]">Rp ${p.harga.toLocaleString()} | ${p.jalur}</p>
-                            </div>
+                            <div><span class="text-[9px] bg-blue-900 text-blue-300 px-2 rounded uppercase font-bold">${kat}</span><p class="text-white font-bold text-xs mt-1">${p.nama}</p><p class="text-slate-400 text-[10px]">Rp ${p.harga.toLocaleString()}</p></div>
                             <div class="flex gap-2">
-                                <button onclick="bukaEdit('${kategori}','${p.sku}','${p.nama}','${p.harga}','${p.jalur}')" class="text-blue-400 bg-blue-500/10 p-2 rounded-lg"><i class="fas fa-pen"></i></button>
-                                <button onclick="hapusProduk('${kategori}','${p.sku}')" class="text-red-400 bg-red-500/10 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
+                                <button onclick="bukaEdit('${kat}','${p.sku}','${p.nama}','${p.harga}','${p.jalur}')" class="text-blue-400 bg-blue-500/10 p-2 rounded-lg"><i class="fas fa-pen"></i></button>
+                                <button onclick="hapusProduk('${kat}','${p.sku}')" class="text-red-400 bg-red-500/10 p-2 rounded-lg"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>`;
                     });
                 });
-                // Update Statistik Sederhana (Bisa dikembangkan nanti)
-                document.getElementById('total-item').innerText = totalProduk + " Item";
-            } else {
-                listHtml.innerHTML = "<p class='text-center text-slate-600 text-[10px] py-10'>Data Kosong</p>";
+                document.getElementById('total-produk').innerText = count + " Item";
             }
         });
     </script>
 </head>
 <body class="bg-[#0f172a] text-white font-sans min-h-screen pb-24">
 
-    <div class="bg-blue-600 pb-12 pt-6 px-6 rounded-b-[2.5rem] shadow-2xl relative z-10">
+    <div class="bg-blue-600 pb-10 pt-6 px-6 rounded-b-[2.5rem] shadow-2xl relative z-10">
         <div class="flex justify-between items-center mb-6">
-            <div>
-                <h1 class="font-black italic text-2xl tracking-tighter">DASHBOARD</h1>
-                <p class="text-[10px] opacity-80 uppercase tracking-widest">Monitoring Realtime</p>
-            </div>
-            <button onclick="location.reload()" class="bg-white/20 hover:bg-white/30 p-2 rounded-full transition"><i class="fas fa-sync-alt animate-spin-slow"></i></button>
+            <div><h1 class="font-black italic text-2xl tracking-tighter">DASHBOARD</h1><p class="text-[10px] opacity-80 uppercase tracking-widest">Admin Panel</p></div>
+            <button onclick="location.reload()" class="bg-white/20 p-2 rounded-full"><i class="fas fa-sync-alt"></i></button>
         </div>
-
-        <div class="grid grid-cols-2 gap-3 mb-3">
-            <div class="glass p-4 rounded-2xl">
-                <p class="text-[9px] font-bold text-yellow-300 uppercase mb-1"><i class="fas fa-wallet mr-1"></i> Digiflazz</p>
-                <h2 class="text-lg font-bold">Rp 0</h2>
-            </div>
-            <div class="glass p-4 rounded-2xl">
-                <p class="text-[9px] font-bold text-purple-300 uppercase mb-1"><i class="fas fa-gamepad mr-1"></i> API Games</p>
-                <h2 class="text-lg font-bold">Rp 0</h2>
-            </div>
-        </div>
-
-        <div class="glass p-4 rounded-2xl flex justify-between items-center border-l-4 border-green-400">
-            <div>
-                <p class="text-[9px] font-bold text-green-300 uppercase mb-1">Estimasi Laba Hari Ini</p>
-                <h2 class="text-2xl font-black">Rp 0</h2>
-            </div>
-            <i class="fas fa-chart-line text-3xl text-green-400/50"></i>
+        <div class="grid grid-cols-2 gap-3">
+            <div class="glass p-4 rounded-2xl"><p class="text-[9px] font-bold text-yellow-300 uppercase mb-1">Digiflazz</p><h2 class="text-lg font-bold">Rp 0</h2></div>
+            <div class="glass p-4 rounded-2xl"><p class="text-[9px] font-bold text-green-300 uppercase mb-1">Estimasi Laba</p><h2 class="text-lg font-bold">Rp 0</h2></div>
         </div>
     </div>
 
     <div class="px-5 -mt-6 relative z-20 space-y-4">
-        
         <div class="grid grid-cols-2 gap-3">
             <div class="bg-[#1e293b] p-4 rounded-2xl border border-slate-700 shadow-lg flex items-center gap-3">
-                <div class="bg-blue-500/20 p-2 rounded-full text-blue-400"><i class="fas fa-history"></i></div>
-                <div><p class="text-[10px] text-gray-400">Total Produk</p><p id="total-item" class="font-bold text-xs">0 Item</p></div>
+                <div class="bg-blue-500/20 p-2 rounded-full text-blue-400"><i class="fas fa-cube"></i></div>
+                <div><p class="text-[10px] text-gray-400">Total Produk</p><p id="total-produk" class="font-bold text-xs">0 Item</p></div>
             </div>
-            <div class="bg-[#1e293b] p-4 rounded-2xl border border-slate-700 shadow-lg flex items-center gap-3">
-                <div class="bg-green-500/20 p-2 rounded-full text-green-400"><i class="fas fa-tags"></i></div>
-                <div><p class="text-[10px] text-gray-400">Status Toko</p><p class="font-bold text-xs text-green-400">Aktif</p></div>
-            </div>
+            
+            <button onclick="bukaTambahKategori()" class="bg-[#1e293b] p-4 rounded-2xl border border-slate-700 shadow-lg flex items-center gap-3 active:scale-95 transition hover:border-purple-500">
+                <div class="bg-purple-500/20 p-2 rounded-full text-purple-400"><i class="fas fa-gamepad"></i></div>
+                <div class="text-left"><p class="text-[10px] text-gray-400">Database</p><p class="font-bold text-xs text-purple-400">+ Kategori</p></div>
+            </button>
         </div>
 
-        <div class="bg-[#1e293b] p-5 rounded-[2rem] border border-slate-700 shadow-lg">
-            <h3 class="text-[10px] font-bold text-gray-400 uppercase mb-3"><i class="fas fa-image mr-1"></i> Ganti Banner Promo</h3>
-            <div class="flex gap-2">
-                <input id="url-banner" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none text-white" placeholder="Tempel URL Gambar...">
-                <button onclick="updateBanner()" class="bg-blue-600 hover:bg-blue-500 px-4 rounded-xl font-bold text-xs transition"><i class="fas fa-save"></i></button>
-            </div>
+        <div class="bg-[#1e293b] p-4 rounded-[1.5rem] border border-slate-700 shadow-lg flex gap-2">
+            <input id="url-banner" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none text-white" placeholder="Link Gambar Banner...">
+            <button onclick="updateBanner()" class="bg-blue-600 px-4 rounded-xl font-bold text-xs"><i class="fas fa-save"></i></button>
         </div>
 
-        <button onclick="document.getElementById('modal-tambah-produk').classList.remove('hidden')" class="w-full bg-green-500 hover:bg-green-600 py-4 rounded-2xl font-black italic text-white shadow-lg shadow-green-900/20 active:scale-95 transition flex items-center justify-center gap-2 text-sm">
-            <i class="fas fa-plus-circle text-lg"></i> TAMBAH PRODUK BARU
+        <button onclick="document.getElementById('modal-tambah-produk').classList.remove('hidden')" class="w-full bg-green-500 hover:bg-green-600 py-4 rounded-2xl font-black italic text-white shadow-lg active:scale-95 transition flex items-center justify-center gap-2">
+            <i class="fas fa-plus-circle text-lg"></i> TAMBAH PRODUK
         </button>
-
     </div>
 
     <div class="px-5 mt-6">
-        <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-3 tracking-widest px-1">Database Produk Aktif</h3>
+        <h3 class="text-[10px] font-bold text-slate-500 uppercase mb-3 px-1">Produk Aktif</h3>
         <div id="list-produk-admin"></div>
+    </div>
+
+    <div id="modal-kategori" class="hidden fixed inset-0 bg-black/90 z-[70] flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-[#1e293b] p-6 rounded-[2rem] w-full max-w-sm border border-slate-600 shadow-2xl relative">
+            <button onclick="document.getElementById('modal-kategori').classList.add('hidden')" class="absolute top-5 right-5 text-gray-400"><i class="fas fa-times"></i></button>
+            <h3 id="judul-modal-kategori" class="font-black text-center text-xl italic mb-6 text-white">KELOLA GAME</h3>
+            
+            <div class="bg-[#0f172a] p-4 rounded-xl border border-slate-700 mb-4 space-y-3">
+                <input id="k-nama" class="w-full bg-[#1e293b] p-3 rounded-lg text-xs border border-slate-600 outline-none" placeholder="Nama Game (Cth: Valorant)">
+                <div class="grid grid-cols-2 gap-2">
+                    <input id="k-kode" class="w-full bg-[#1e293b] p-3 rounded-lg text-xs border border-slate-600 outline-none" placeholder="Kode (Cth: valo)">
+                    <input id="k-icon" class="w-full bg-[#1e293b] p-3 rounded-lg text-xs border border-slate-600 outline-none" placeholder="Link Icon URL">
+                </div>
+                <button onclick="simpanKategori()" class="w-full bg-purple-600 py-3 rounded-lg font-bold text-xs">SIMPAN GAME</button>
+            </div>
+
+            <p class="text-[10px] text-gray-400 uppercase font-bold mb-2">Game Terdaftar (Klik Pensil untuk Edit):</p>
+            <div id="list-kategori-admin" class="max-h-40 overflow-y-auto pr-1 custom-scroll"></div>
+        </div>
     </div>
 
     <div id="modal-tambah-produk" class="hidden fixed inset-0 bg-black/90 z-[60] flex items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-[#1e293b] p-6 rounded-[2rem] w-full max-w-sm border border-slate-600 shadow-2xl relative">
-            <button onclick="document.getElementById('modal-tambah-produk').classList.add('hidden')" class="absolute top-5 right-5 text-gray-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
-            <h3 class="font-black text-center text-xl italic mb-6 text-white tracking-tight">TAMBAH PRODUK</h3>
+            <button onclick="document.getElementById('modal-tambah-produk').classList.add('hidden')" class="absolute top-5 right-5 text-gray-400"><i class="fas fa-times"></i></button>
+            <h3 id="modal-title-produk" class="font-black text-center text-xl italic mb-6 text-white">TAMBAH PRODUK</h3>
             
             <div class="space-y-4">
+                <div><label class="text-[9px] text-gray-400 font-bold ml-1">Pilih Game</label><select id="f-kategori" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none"></select></div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="text-[9px] text-gray-400 font-bold ml-1">Kategori</label>
-                        <select id="f-kategori" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none"><option value="ml">Mobile Legends</option><option value="ff">Free Fire</option><option value="pubg">PUBG Mobile</option></select>
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-gray-400 font-bold ml-1">Kode SKU</label>
-                        <input id="f-sku" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none" placeholder="Cth: ML5">
-                    </div>
+                    <input id="f-sku" class="bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none" placeholder="SKU (Cth: ML5)">
+                    <input id="f-harga" type="number" class="bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none" placeholder="Harga (Rp)">
                 </div>
-                <div>
-                    <label class="text-[9px] text-gray-400 font-bold ml-1">Nama Produk</label>
-                    <input id="f-nama" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none" placeholder="Cth: 5 Diamonds">
-                </div>
-                <div>
-                    <label class="text-[9px] text-gray-400 font-bold ml-1">Harga Jual</label>
-                    <input id="f-harga" type="number" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none" placeholder="Rp 0">
-                </div>
-                <div>
-                    <label class="text-[9px] text-gray-400 font-bold ml-1">Jalur Server</label>
-                    <select id="f-jalur" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 text-white outline-none"><option value="digi">Server: Digiflazz</option><option value="api">Server: API Games</option></select>
-                </div>
-                
-                <button onclick="prosesSimpan()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold shadow-lg mt-2 text-sm transition">SIMPAN DATA</button>
+                <input id="f-nama" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none" placeholder="Nama Produk">
+                <select id="f-jalur" class="w-full bg-[#0f172a] p-3 rounded-xl text-xs border border-slate-600 outline-none"><option value="digi">Digiflazz</option><option value="api">API Games</option></select>
+                <button onclick="prosesSimpan()" class="w-full bg-green-500 py-4 rounded-xl font-bold text-sm shadow-lg mt-2">SIMPAN</button>
             </div>
         </div>
     </div>
-
 </body>
 </html>

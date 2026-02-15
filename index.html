@@ -12,6 +12,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
+        // CONFIG FIREBASE (SAMA DENGAN ADMIN)
         const firebaseConfig = {
           apiKey: "AIzaSyAIxFEDC9QBYsOyPFFL5tUBz1I8mlH66Hs",
           authDomain: "games-ku.firebaseapp.com",
@@ -26,13 +27,32 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- 1. LOAD BANNER OTOMATIS ---
+        // 1. LOAD BANNER
         onValue(ref(db, 'pengaturan/banner'), (snap) => {
             const data = snap.val();
             if(data && data.url) document.getElementById('img-banner').src = data.url;
         });
 
-        // --- 2. LOAD PRODUK BERDASARKAN KATEGORI ---
+        // 2. LOAD MENU GAME
+        onValue(ref(db, 'kategori_game'), (snap) => {
+            const data = snap.val();
+            const grid = document.getElementById('grid-game');
+            grid.innerHTML = "";
+
+            if(data) {
+                Object.values(data).forEach(game => {
+                    grid.innerHTML += `
+                    <div onclick="bukaGame('${game.kode}', '${game.nama}')" class="active-scale bg-white p-3 rounded-[2rem] shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32 cursor-pointer hover:border-blue-400">
+                        <img src="${game.icon}" class="w-12 h-12 object-contain">
+                        <span class="text-[10px] font-bold text-center leading-tight text-gray-700">${game.nama}</span>
+                    </div>`;
+                });
+            } else {
+                grid.innerHTML = "<p class='col-span-3 text-center text-xs text-gray-400 py-10'>Belum ada game tersedia.</p>";
+            }
+        });
+
+        // 3. LOAD PRODUK
         window.bukaGame = (kategori, namaGame) => {
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('order-page').classList.remove('hidden');
@@ -44,31 +64,23 @@
             onValue(ref(db, 'produk/' + kategori), (snap) => {
                 const data = snap.val();
                 list.innerHTML = "";
-                if(!data) return list.innerHTML = "<p class='text-center py-10 text-gray-400'>Produk sedang kosong.</p>";
+                if(!data) return list.innerHTML = "<p class='text-center py-10 text-gray-400 text-xs'>Produk belum tersedia untuk game ini.</p>";
                 
                 Object.values(data).sort((a,b)=>a.harga-b.harga).forEach(p => {
                     list.innerHTML += `
                     <div onclick="kirimPesanan('${p.nama}', ${p.harga}, '${namaGame}')" class="active-scale bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center mb-3 shadow-sm cursor-pointer hover:border-blue-500 transition">
-                        <div>
-                            <p class="font-bold text-gray-800 text-sm">${p.nama}</p>
-                            <p class="text-[10px] text-gray-400 italic">Proses Instan</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-blue-600 font-black text-sm">Rp ${p.harga.toLocaleString()}</p>
-                        </div>
+                        <div><p class="font-bold text-gray-800 text-sm">${p.nama}</p><p class="text-[10px] text-gray-400 italic">Proses Instan</p></div>
+                        <div class="text-right"><p class="text-blue-600 font-black text-sm">Rp ${p.harga.toLocaleString()}</p></div>
                     </div>`;
                 });
             });
         };
 
-        // --- 3. KIRIM KE WHATSAPP ---
         window.kirimPesanan = (item, harga, game) => {
             const id = document.getElementById('user-id').value;
             if(!id) return alert("Mohon masukkan ID Game Anda!");
-            
-            const nomorAdmin = "6285371178655"; // Ganti dengan nomor WA Anda
+            const nomorAdmin = "6285371178655"; 
             const pesan = `Halo Admin, Saya mau Top Up:\n\n🎮 Game: ${game}\n💎 Item: ${item}\n🆔 ID: ${id}\n💰 Harga: Rp ${harga.toLocaleString()}`;
-            
             window.open(`https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`, '_blank');
         };
     </script>
@@ -76,52 +88,30 @@
 <body class="bg-gray-50 text-gray-800 font-sans min-h-screen pb-20">
 
     <nav class="bg-blue-600 p-5 rounded-b-[2rem] shadow-xl sticky top-0 z-50 flex justify-between items-center text-white">
-        <div class="flex items-center gap-2">
-            <i class="fas fa-gamepad text-xl"></i>
-            <h1 class="font-black italic tracking-tighter text-lg">GAME KU</h1>
-        </div>
-        <div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold">
-            <i class="fas fa-circle text-green-400 text-[8px] mr-1"></i> ONLINE
-        </div>
+        <div class="flex items-center gap-2"><i class="fas fa-gamepad text-xl"></i><h1 class="font-black italic tracking-tighter text-lg">GAME KU</h1></div>
+        <div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold"><i class="fas fa-circle text-green-400 text-[8px] mr-1"></i> ONLINE</div>
     </nav>
 
     <div id="home-page" class="p-5">
         <div class="w-full h-44 bg-gray-300 rounded-[2rem] overflow-hidden shadow-lg mb-8 relative">
             <img id="img-banner" src="https://img.freepik.com/free-vector/gaming-banner-template-with-flat-design_23-2148902691.jpg" class="w-full h-full object-cover">
-            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
-                <p class="text-white text-xs font-bold">Promo Spesial Hari Ini!</p>
-            </div>
+            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4"><p class="text-white text-xs font-bold">Promo Spesial Hari Ini!</p></div>
         </div>
 
-        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 px-1">Pilih Game Favorit</h3>
-        <div class="grid grid-cols-3 gap-4">
-            <div onclick="bukaGame('ml', 'Mobile Legends')" class="active-scale bg-white p-3 rounded-[2rem] shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32">
-                <img src="https://seeklogo.com/images/M/mobile-legends-bang-bang-logo-3A26E92043-seeklogo.com.png" class="w-12 h-12 object-contain">
-                <span class="text-[10px] font-bold">MLBB</span>
-            </div>
-            <div onclick="bukaGame('ff', 'Free Fire')" class="active-scale bg-white p-3 rounded-[2rem] shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32">
-                <img src="https://upload.wikimedia.org/wikipedia/en/a/a6/Garena_Free_Fire_Logo.svg" class="w-12 h-12 object-contain">
-                <span class="text-[10px] font-bold">Free Fire</span>
-            </div>
-            <div onclick="bukaGame('pubg', 'PUBG Mobile')" class="active-scale bg-white p-3 rounded-[2rem] shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-32">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7b/PUBG_Mobile_Logo.svg/1200px-PUBG_Mobile_Logo.svg.png" class="w-12 h-12 object-contain">
-                <span class="text-[10px] font-bold">PUBG</span>
-            </div>
-        </div>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 px-1">Pilih Game</h3>
+        <div id="grid-game" class="grid grid-cols-3 gap-4"></div>
     </div>
 
     <div id="order-page" class="hidden p-5">
         <button onclick="location.reload()" class="bg-white border border-gray-200 px-4 py-2 rounded-full text-xs font-bold mb-6 shadow-sm"><i class="fas fa-arrow-left mr-2"></i> Kembali</button>
-        
         <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-gray-100 mb-6">
-            <h2 id="game-title" class="text-xl font-black text-blue-600 italic mb-2">GAME NAME</h2>
-            <p class="text-[10px] text-gray-400 mb-4">Masukkan User ID Anda untuk melanjutkan.</p>
+            <h2 id="game-title" class="text-xl font-black text-blue-600 italic mb-2">GAME</h2>
+            <p class="text-[10px] text-gray-400 mb-4">Masukkan User ID Anda.</p>
             <div class="bg-gray-50 p-3 rounded-xl border border-gray-200 flex items-center gap-3">
                 <i class="fas fa-id-card text-gray-400"></i>
                 <input id="user-id" class="bg-transparent w-full outline-none font-bold text-gray-700" placeholder="Contoh: 12345678">
             </div>
         </div>
-
         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">Pilih Item</h3>
         <div id="list-produk"></div>
     </div>
