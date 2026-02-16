@@ -75,7 +75,7 @@
         import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         // --- URL MACRODROID ---
-        // ID ini sudah SESUAI dengan HP Server Anda (c299f377...)
+        // ID ini sudah SAMA PERSIS dengan HP Server Anda
         const MACRODROID_URL = "https://trigger.macrodroid.com/c299f377-88bc-44e9-930b-1be2424a9a9f/order"; 
 
         const firebaseConfig = {
@@ -119,7 +119,10 @@
                 .then(() => {
                     setTimeout(() => { 
                         document.getElementById('modal-loading').classList.add('hidden'); 
-                        alert("Pesanan Diproses Server!"); 
+                        
+                        // PERHATIKAN TULISAN INI SAAT TES NANTI:
+                        alert("Pesanan Diproses Server! - VERSI BARU"); 
+                        
                         location.reload(); 
                     }, 2000);
                 })
