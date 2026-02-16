@@ -74,8 +74,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
-        // --- URL MACRODROID ANDA ---
-        // ID ini sudah SAMA PERSIS dengan HP Server Anda
+        // --- URL MACRODROID ---
+        // ID ini sudah SESUAI dengan HP Server Anda (c299f377...)
         const MACRODROID_URL = "https://trigger.macrodroid.com/c299f377-88bc-44e9-930b-1be2424a9a9f/order"; 
 
         const firebaseConfig = {
@@ -112,7 +112,7 @@
             .then(() => {
                 
                 // 2. KIRIM SINYAL KE HP SERVER ANDA (MACRODROID)
-                // Ini bagian terpenting agar data 'sku' dan 'tujuan' terkirim
+                // Kode ini yang akan mengisi variabel [webhook_sku] dan [webhook_tujuan] di HP Anda
                 const finalUrl = `${MACRODROID_URL}?sku=${sku}&tujuan=${id}`;
                 
                 fetch(finalUrl, { mode: 'no-cors' })
