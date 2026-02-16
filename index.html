@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME KU - Top Up Termurah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .active-scale:active{transform:scale(0.95); transition:0.1s;}
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Animasi Teks Berjalan */
+        .marquee-container { overflow: hidden; white-space: nowrap; position: relative; }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee-animation 15s linear infinite; }
+        @keyframes marquee-animation { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen pb-20">
+
+    <nav class="bg-blue-600 p-5 rounded-b-[2rem] shadow-xl sticky top-0 z-50 flex justify-between items-center text-white">
+        <div class="flex items-center gap-2">
+            <div class="bg-white/20 p-2 rounded-xl overflow-hidden w-11 h-11 flex items-center justify-center border border-white/20 shadow-sm">
+                <img id="logo-header" src="https://cdn-icons-png.flaticon.com/512/808/808439.png" class="w-full h-full object-contain">
+            </div>
+            <div><h1 class="font-black italic tracking-tighter text-lg leading-none">GAME KU</h1><p class="text-[9px] opacity-80 uppercase tracking-widest">Top Up Terpercaya</p></div>
+        </div>
+        <div class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-bold flex items-center gap-1"><div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div> ONLINE</div>
+    </nav>
+
+    <div id="home-page" class="p-5">
+        <div class="relative w-full h-32 rounded-2xl mb-4 overflow-hidden shadow-lg group">
+            <div id="slider-banner" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth no-scrollbar">
+                <div class="w-full h-full flex-shrink-0 bg-gray-300 flex items-center justify-center snap-center"><p class="text-xs text-gray-500 animate-pulse">Memuat Promo...</p></div>
+            </div>
+            <div id="indikator-banner" class="absolute bottom-2 left-0 w-full flex justify-center gap-1 z-10"></div>
+        </div>
+
+        <div id="container-info" class="hidden mb-6 bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex items-center gap-3 shadow-sm overflow-hidden">
+            <div class="bg-yellow-400 text-yellow-900 w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 z-10 shadow-sm"><i class="fas fa-bullhorn text-xs animate-swing"></i></div>
+            <div class="w-full marquee-container"><div id="text-info-display" class="marquee-text text-xs font-bold text-yellow-800">...</div></div>
+        </div>
+
+        <div class="flex items-center justify-between mb-4 px-1">
+            <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Pilih Game Favorit</h3>
+            <span class="text-[10px] text-blue-500 font-bold bg-blue-100 px-2 py-1 rounded-full">Lengkap</span>
+        </div>
+        <div id="grid-game" class="grid grid-cols-3 gap-3"></div>
+    </div>
+
+    <div id="order-page" class="hidden p-5">
+        <button onclick="location.reload()" class="bg-white border border-gray-200 px-4 py-3 rounded-2xl text-xs font-bold mb-6 shadow-sm flex items-center gap-2 hover:bg-gray-50 transition"><i class="fas fa-arrow-left text-blue-600"></i> Kembali</button>
+        <div class="bg-white p-6 rounded-[2rem] shadow-lg border border-gray-100 mb-6 relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-blue-600 w-20 h-20 rounded-bl-[100%] -mr-10 -mt-10 opacity-10"></div>
+            <h2 id="game-title" class="text-xl font-black text-blue-600 italic mb-1 uppercase">GAME NAME</h2>
+            <p class="text-[10px] text-gray-400 mb-4">Pastikan User ID Anda benar.</p>
+            <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex items-center gap-3"><i class="fas fa-id-card text-gray-400 text-lg"></i><input id="user-id" type="tel" class="bg-transparent w-full outline-none font-bold text-gray-700 placeholder-gray-300 text-sm" placeholder="Masukkan ID / No.HP"></div>
+        </div>
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 px-1">Pilih Item</h3>
+        <div id="list-produk" class="space-y-3"></div>
+    </div>
+
+    <div id="modal-loading" class="hidden fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white p-6 rounded-2xl w-full max-w-xs text-center">
+            <i class="fas fa-robot text-4xl text-blue-600 mb-4 animate-bounce"></i>
+            <h3 class="font-bold text-lg mb-1">Memproses Pesanan...</h3>
+            <p class="text-xs text-gray-400 mb-4">Sistem sedang mengirim ke Server...</p>
+            <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden"><div class="bg-blue-600 h-full w-1/2 animate-[pulse_1s_infinite]"></div></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        // --- URL MACRODROID ---
+        // ID ini sudah SESUAI dengan HP Server Anda (c299f377...)
+        const MACRODROID_URL = "https://trigger.macrodroid.com/c299f377-88bc-44e9-930b-1be2424a9a9f/order"; 
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAIxFEDC9QBYsOyPFFL5tUBz1I8mlH66Hs",
+          authDomain: "games-ku.firebaseapp.com",
+          databaseURL: "https://games-ku-default-rtdb.firebaseio.com",
+          projectId: "games-ku",
+          storageBucket: "games-ku.firebasestorage.app",
+          messagingSenderId: "488423956",
+          appId: "1:488423956:web:79f659dee525fdbc76dd01",
+          measurementId: "G-JYEJK67H4V"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // LOGIC SISTEM
+        onValue(ref(db, 'pengaturan/logo'), (snap) => { if(snap.val()?.url) document.getElementById('logo-header').src = snap.val().url; });
+        onValue(ref(db, 'pengaturan/info_berjalan'), (snap) => { const d=snap.val(); const c=document.getElementById('container-info'); if(d?.text?.trim()){c.classList.remove('hidden');document.getElementById('text-info-display').innerText=d.text;}else{c.classList.add('hidden');} });
+        
+        onValue(ref(db, 'banners'), (snap) => { const d=snap.val(); const s=document.getElementById('slider-banner'); const i=document.getElementById('indikator-banner'); s.innerHTML=""; i.innerHTML=""; if(d){Object.values(d).forEach(b=>{s.innerHTML+=`<img src="${b.url}" class="w-full h-full object-cover flex-shrink-0 snap-center bg-gray-100">`;i.innerHTML+=`<div class="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-sm shadow-sm"></div>`;});let p=0;setInterval(()=>{p+=s.offsetWidth;if(p>=s.scrollWidth)p=0;s.scrollTo({left:p,behavior:'smooth'});},4000);} });
+        onValue(ref(db, 'kategori_game'), (snap) => { const d=snap.val(); const g=document.getElementById('grid-game'); g.innerHTML=""; if(d)Object.values(d).forEach(ga=>{g.innerHTML+=`<div onclick="bukaGame('${ga.kode}','${ga.nama}')" class="active-scale bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center gap-2 h-28 cursor-pointer"><img src="${ga.icon}" class="w-8 h-8 object-contain"><span class="text-[10px] font-bold text-center leading-tight text-gray-700 line-clamp-2">${ga.nama}</span></div>`;}); });
+
+        window.bukaGame = (k,n) => { document.getElementById('home-page').classList.add('hidden'); document.getElementById('order-page').classList.remove('hidden'); document.getElementById('game-title').innerText=n; window.scrollTo(0,0); const l=document.getElementById('list-produk'); l.innerHTML="<div class='text-center py-20'><i class='fas fa-circle-notch fa-spin text-blue-500'></i></div>"; onValue(ref(db,'produk/'+k),(s)=>{ const d=s.val(); l.innerHTML=""; if(!d)return l.innerHTML="<p class='text-center text-xs text-gray-400'>Kosong</p>"; Object.values(d).sort((a,b)=>a.harga-b.harga).forEach(p=>{ l.innerHTML+=`<div onclick="beliOtomatis('${p.sku}', '${p.nama}', ${p.harga}, '${n}')" class="active-scale bg-white p-4 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm cursor-pointer"><div class="flex items-center gap-3"><div class="bg-blue-50 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs"><i class="fas fa-gem"></i></div><div><p class="font-bold text-gray-800 text-sm">${p.nama}</p></div></div><div class="text-right"><p class="text-blue-600 font-black text-sm">Rp ${p.harga.toLocaleString()}</p></div></div>`; }); }); };
+
+        window.beliOtomatis = (sku, item, harga, game) => {
+            const id = document.getElementById('user-id').value;
+            if(!id) return alert("Masukkan ID/Nomor HP dulu!");
+
+            document.getElementById('modal-loading').classList.remove('hidden');
+
+            // 1. Simpan ke Firebase (History)
+            const newRef = push(ref(db, 'transaksi_masuk'));
+            set(newRef, { sku: sku, item: item, harga: harga, tujuan: id, game: game, status: 'pending', tanggal: new Date().toLocaleString() })
+            .then(() => {
+                
+                // 2. KIRIM SINYAL KE HP SERVER ANDA (MACRODROID)
+                // Kode ini yang akan mengisi variabel [webhook_sku] dan [webhook_tujuan] di HP Anda
+                const finalUrl = `${MACRODROID_URL}?sku=${sku}&tujuan=${id}`;
+                
+                fetch(finalUrl, { mode: 'no-cors' })
+                .then(() => {
+                    setTimeout(() => { 
+                        document.getElementById('modal-loading').classList.add('hidden'); 
+                        alert("Pesanan Diproses Server!"); 
+                        location.reload(); 
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('modal-loading').classList.add('hidden');
+                    alert("Gagal koneksi ke Server HP. Coba lagi.");
+                });
+            });
+        };
+    </script>
+</body>
+</html>
