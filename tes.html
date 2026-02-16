@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TES KONEKSI BUKAOLSHOP (Via Vercel API)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4 font-sans">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg border border-slate-200">
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
+                <i class="fas fa-satellite-dish text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-800">Uji Koneksi Server</h1>
+            <p class="text-sm text-slate-500 mt-2">Vercel <i class="fas fa-arrow-right mx-1 text-xs"></i> BukaOlshop API</p>
+        </div>
+
+        <div class="space-y-5">
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1 tracking-wider">Member ID</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-user"></i></span>
+                    <input type="text" id="memberID" class="w-full bg-slate-50 border border-slate-300 pl-10 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Contoh: Shes" value="Shes">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1 tracking-wider">API Key</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-key"></i></span>
+                    <input type="text" id="apiKey" class="w-full bg-slate-50 border border-slate-300 pl-10 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Tempel API Key panjang disini...">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1 tracking-wider">Secret Key</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fas fa-lock"></i></span>
+                    <input type="password" id="secretKey" class="w-full bg-slate-50 border border-slate-300 pl-10 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Secret Key / PIN Transaksi">
+                </div>
+            </div>
+
+            <button onclick="cekSaldo()" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 rounded-xl shadow-lg transform transition active:scale-95 flex items-center justify-center gap-2">
+                <i class="fas fa-paper-plane"></i> CEK SALDO SEKARANG
+            </button>
+        </div>
+
+        <div id="loading" class="hidden mt-6 text-center">
+            <i class="fas fa-spinner fa-spin text-blue-600 text-2xl"></i>
+            <p class="text-xs text-blue-600 font-bold mt-2">Sedang menghubungi server...</p>
+        </div>
+
+        <div id="resultBox" class="hidden mt-6 p-4 rounded-xl border-l-4">
+            <h3 id="resultTitle" class="font-bold text-sm mb-1">STATUS</h3>
+            <p id="resultText" class="text-xs font-mono break-all"></p>
+        </div>
+    </div>
+
+    <script>
+        async function cekSaldo() {
+            // Ambil Data
+            const memberID = document.getElementById('memberID').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const secretKey = document.getElementById('secretKey').value.trim();
+            
+            // Elemen UI
+            const btn = document.querySelector('button');
+            const loading = document.getElementById('loading');
+            const resultBox = document.getElementById('resultBox');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultText = document.getElementById('resultText');
+
+            // Validasi
+            if(!memberID || !apiKey || !secretKey) {
+                alert("Mohon lengkapi semua data (Member ID, API Key, dan Secret Key)!");
+                return;
+            }
+
+            // UI Loading
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+            loading.classList.remove('hidden');
+            resultBox.classList.add('hidden');
+
+            try {
+                // Tembak ke API Vercel Kita (Bukan langsung ke BukaOlshop)
+                const response = await fetch('/api/cek', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ memberID, apiKey, secretKey })
+                });
+
+                const data = await response.json();
+
+                // Tampilkan Hasil
+                resultBox.classList.remove('hidden');
+                
+                if (data.data && (typeof data.data.saldo !== 'undefined')) {
+                    // SUKSES
+                    resultBox.className = "mt-6 p-4 rounded-xl border-l-4 bg-green-50 border-green-500 text-green-700";
+                    resultTitle.innerText = "✅ KONEKSI BERHASIL!";
+                    resultText.innerHTML = `
+                        <span class="text-2xl font-bold block mt-2">Rp ${parseInt(data.data.saldo).toLocaleString('id-ID')}</span>
+                        <span class="block mt-2 opacity-75">Sisa Saldo Anda Aktif</span>
+                    `;
+                } else {
+                    // GAGAL DARI BUKAOLSHOP
+                    resultBox.className = "mt-6 p-4 rounded-xl border-l-4 bg-red-50 border-red-500 text-red-700";
+                    resultTitle.innerText = "❌ GAGAL / DITOLAK";
+                    resultText.innerText = JSON.stringify(data, null, 2);
+                }
+
+            } catch (error) {
+                // ERROR JARINGAN
+                resultBox.classList.remove('hidden');
+                resultBox.className = "mt-6 p-4 rounded-xl border-l-4 bg-orange-50 border-orange-500 text-orange-700";
+                resultTitle.innerText = "⚠️ ERROR SISTEM";
+                resultText.innerText = error.message;
+            } finally {
+                // Reset UI
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+                loading.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
